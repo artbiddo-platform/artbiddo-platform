@@ -1,0 +1,46 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(request: NextRequest) {
+  try {
+    // Categorías específicas de obras de arte originales
+    const categories = [
+      {
+        id: '1',
+        name: 'Serigrafías Originales',
+        description: 'Serigrafías originales numeradas y firmadas por artistas reconocidos. Ediciones limitadas con certificado de autenticidad.',
+        image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
+        artworkCount: 2
+      },
+      {
+        id: '2',
+        name: 'Litografías Originales',
+        description: 'Litografías originales firmadas por maestros del arte. Impresas en talleres especializados con técnicas tradicionales.',
+        image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop',
+        artworkCount: 2
+      },
+      {
+        id: '3',
+        name: 'Aguafuertes Originales',
+        description: 'Aguafuertes originales numerados y firmados. Técnica de grabado tradicional con ediciones limitadas.',
+        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+        artworkCount: 2
+      },
+      {
+        id: '4',
+        name: 'Obras Únicas',
+        description: 'Piezas únicas y exclusivas de artistas contemporáneos. Técnicas mixtas y obras de arte originales.',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
+        artworkCount: 0
+      }
+    ];
+
+    return NextResponse.json({ categories });
+
+  } catch (error) {
+    console.error('Error al obtener categorías:', error);
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+}
