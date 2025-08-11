@@ -1,142 +1,122 @@
-# ArtBiddo - Plataforma de Subastas de Arte
+# 🎨 ArtBiddo - Plataforma de Subastas de Arte
 
-Plataforma profesional de subastas de arte contemporáneo con obras originales, serigrafías, litografías y aguafuertes.
+Una plataforma moderna y completa para subastas de arte con panel de administración, sistema de pagos y gestión de contenido.
 
-## 🚀 Características
+## 🚀 Deploy en Vercel
 
-- **Catálogo de Obras**: Obras de arte profesionales con imágenes de alta calidad
-- **Sistema de Pujas**: Pujas en tiempo real con validación de saldo
-- **Autenticación**: Sistema completo de registro y login de usuarios
-- **Categorías**: Serigrafías, Litografías, Aguafuertes y Obras Únicas
-- **Diseño Responsive**: Optimizado para móvil y desktop
-- **Panel de Administración**: Gestión completa de usuarios y subastas
+### Estado Actual
+- ✅ **Build exitoso** - Listo para producción
+- ✅ **Panel de administración** - CMS completo
+- ✅ **Base de datos PostgreSQL** - Configurada para Neon
+- ✅ **Variables de entorno** - Preparadas para Vercel
+
+### Deploy Rápido
+
+1. **Crear base de datos en Neon:**
+   - Ve a [neon.tech](https://neon.tech)
+   - Crea un proyecto gratuito
+   - Copia la URL de conexión
+
+2. **Subir a GitHub:**
+```bash
+   git remote add origin https://github.com/tu-usuario/artbiddo-platform.git
+   git push -u origin main
+   ```
+
+3. **Deploy en Vercel:**
+   - Conecta tu repositorio de GitHub
+   - Configura las variables de entorno
+   - Deploy automático
+
+### Variables de Entorno (Vercel)
+```env
+DATABASE_URL=postgresql://usuario:password@host:puerto/database
+NEXTAUTH_URL=https://tu-dominio.vercel.app
+NEXTAUTH_SECRET=tu-secret-super-seguro
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NODE_ENV=production
+```
+
+## 🎯 Funcionalidades
+
+### Panel de Administración
+- 📄 **Gestión de contenido** - CMS completo
+- 👥 **Gestión de usuarios** - Administración de usuarios
+- 🎨 **Gestión de subastas** - Control de obras de arte
+- 📊 **Reportes** - Analytics y estadísticas
+- ⚙️ **Configuración** - Ajustes del sitio
+
+### Funcionalidades Principales
+- 🔐 **Autenticación** - Login/registro seguro
+- 💳 **Sistema de pagos** - Integración con Stripe
+- 🎯 **Subastas en tiempo real** - Pujas en vivo
+- 📱 **Responsive** - Diseño adaptativo
+- 🚀 **Performance** - Optimizado para producción
 
 ## 🛠️ Tecnologías
 
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS
-- **Base de Datos**: SQLite (desarrollo) / PostgreSQL (producción)
-- **ORM**: Prisma
-- **Autenticación**: JWT con bcryptjs
-- **Pagos**: Stripe (configurado)
-- **Deployment**: Vercel
+- **Frontend:** Next.js 14, React, TypeScript
+- **Styling:** Tailwind CSS
+- **Base de datos:** PostgreSQL (Neon)
+- **ORM:** Prisma
+- **Autenticación:** NextAuth.js
+- **Pagos:** Stripe
+- **Deploy:** Vercel
 
-## 📦 Instalación
+## 📁 Estructura del Proyecto
 
-1. **Clonar el repositorio**
-```bash
-git clone <repository-url>
-cd auction-master
+```
+auction-master/
+├── app/                    # Next.js App Router
+│   ├── admin/             # Panel de administración
+│   ├── api/               # API Routes
+│   └── ...                # Páginas públicas
+├── components/            # Componentes reutilizables
+├── lib/                   # Utilidades y configuraciones
+├── prisma/               # Schema y migraciones
+└── public/               # Archivos estáticos
 ```
 
-2. **Instalar dependencias**
-```bash
-npm install
-```
+## 🔗 URLs Importantes
 
-3. **Configurar variables de entorno**
-```bash
-cp .env.example .env
-```
+- **Sitio principal:** `/`
+- **Panel admin:** `/admin/content`
+- **Login admin:** `/admin/login`
+- **Gestión usuarios:** `/admin/users`
+- **Gestión subastas:** `/admin/auctions`
 
-4. **Configurar la base de datos**
-```bash
-npx prisma generate
-npx prisma db push
-npm run db:seed
-```
+## 📚 Documentación
 
-5. **Ejecutar en desarrollo**
+- [Guía de Deploy](DEPLOY_INSTRUCTIONS.md)
+- [Configuración Neon](NEON_SETUP.md)
+- [Configuración Stripe](STRIPE_SETUP.md)
+- [Guía CMS](CMS_GUIDE.md)
+
+## 🚀 Comandos Útiles
+
 ```bash
+# Desarrollo
 npm run dev
+
+# Build para producción
+npm run build
+
+# Base de datos
+npx prisma db push
+npx prisma db seed
+
+# Deploy
+git add .
+git commit -m "Update"
+git push
 ```
-
-## 🌐 Despliegue en Vercel
-
-### 1. Preparación
-
-- Asegúrate de que el build funcione localmente: `npm run build`
-- Verifica que todas las variables de entorno estén configuradas
-
-### 2. Variables de Entorno en Vercel
-
-Configura las siguientes variables en el dashboard de Vercel:
-
-```env
-DATABASE_URL="postgresql://..."
-NEXTAUTH_URL="https://tu-dominio.vercel.app"
-JWT_SECRET="tu-super-secreto-jwt-muy-seguro-2024"
-```
-
-### 3. Base de Datos de Producción
-
-Para producción, se recomienda usar PostgreSQL:
-
-1. Crear una base de datos PostgreSQL (Vercel Postgres, Supabase, etc.)
-2. Actualizar `DATABASE_URL` en Vercel
-3. Ejecutar migraciones: `npx prisma db push`
-4. Poblar datos: `npm run db:seed`
-
-### 4. Despliegue
-
-1. Conectar repositorio a Vercel
-2. Configurar variables de entorno
-3. Deploy automático
-
-## 👥 Usuarios de Prueba
-
-- **Admin**: `admin@artbiddo.com` / `admin123456`
-- **Vendedor**: `carlos.rodriguez@email.com` / `password123`
-- **Comprador**: `ana.lopez@email.com` / `password123`
-
-## 📱 URLs Principales
-
-- **Inicio**: `/`
-- **Subastas**: `/subastas`
-- **Login**: `/login`
-- **Registro**: `/register`
-- **Admin**: `/admin/login`
-
-## 🔧 Scripts Disponibles
-
-- `npm run dev` - Servidor de desarrollo
-- `npm run build` - Build de producción
-- `npm run start` - Servidor de producción
-- `npm run db:seed` - Poblar base de datos
-- `npx prisma studio` - Interfaz de base de datos
-
-## 📊 Estado del Proyecto
-
-### ✅ Completado
-- Frontend completo y responsive
-- APIs de autenticación
-- Sistema de pujas
-- Catálogo de obras
-- Panel de administración
-- Diseño profesional
-
-### 🔄 En Desarrollo
-- Integración completa con Stripe
-- Notificaciones en tiempo real
-- Sistema de mensajería
-
-### 📋 Pendiente
-- Despliegue en producción
-- Configuración de dominio personalizado
-- Optimizaciones de rendimiento
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crear una rama para tu feature
-3. Commit tus cambios
-4. Push a la rama
-5. Abrir un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT.
 
 ## 📞 Soporte
 
-Para soporte técnico, contacta a: info@artbiddo.com
+Para soporte técnico o preguntas sobre el deploy, revisa la documentación en los archivos `.md` del proyecto.
+
+---
+
+**¡Listo para el deploy en Vercel!** 🎉
