@@ -1,148 +1,102 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Gavel, 
-  Users, 
-  Settings, 
-  BarChart3, 
-  FileText,
-  LogOut,
-  Menu,
-  X,
-  Edit3
-} from 'lucide-react';
 
 interface AdminSidebarProps {
-  user: {
-    name: string;
-    email: string;
-    role: string;
-    avatar?: string;
-  };
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-const navigation = [
-  { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-  { name: 'Subastas', href: '/admin/auctions', icon: Gavel },
-  { name: 'Usuarios', href: '/admin/users', icon: Users },
-  { name: 'Contenido', href: '/admin/content', icon: Edit3 },
-  { name: 'Reportes', href: '/admin/reports', icon: BarChart3 },
-  { name: 'Configuración', href: '/admin/settings', icon: Settings },
-];
+export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-export default function AdminSidebar({ user }: AdminSidebarProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const pathname = usePathname();
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminUser');
-    window.location.href = '/admin/login';
-  };
+  const menuItems = [
+    { id: 'dashboard', name: 'Dashboard', icon: '📊' },
+    { id: 'content', name: 'Contenido', icon: '📝' },
+    { id: 'auctions', name: 'Subastas', icon: '🎨' },
+    { id: 'users', name: 'Usuarios', icon: '👥' },
+    { id: 'reports', name: 'Reportes', icon: '📈' },
+    { id: 'settings', name: 'Configuración', icon: '⚙️' }
+  ];
 
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden">
+      <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="bg-white p-2 rounded-lg shadow-lg"
         >
-          {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
       </div>
 
+      {/* Mobile overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <Gavel className="w-5 h-5 text-white" />
-              </div>
-              <span className="ml-3 text-xl font-bold text-gray-900">ArtBiddo</span>
-            </div>
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b">
+            <h1 className="text-xl font-bold text-gray-900">ArtBiddo Admin</h1>
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-500"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden text-gray-500 hover:text-gray-700"
             >
-              <X className="h-5 w-5" />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
-          </div>
-
-          {/* User Profile */}
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
-                ) : (
-                  <span className="text-primary-600 font-semibold">
-                    {user.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                <p className="text-xs text-gray-500">{user.email}</p>
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
-                  {user.role}
-                </span>
-              </div>
-            </div>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
-                    ${isActive 
-                      ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }
-                  `}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.name}
-                </Link>
-              );
-            })}
+          <nav className="flex-1 p-4 space-y-2">
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  onTabChange(item.id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`
+                  w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors
+                  ${activeTab === item.id
+                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                    : 'text-gray-700 hover:bg-gray-100'
+                  }
+                `}
+              >
+                <span className="mr-3 text-lg">{item.icon}</span>
+                <span className="font-medium">{item.name}</span>
+              </button>
+            ))}
           </nav>
 
-          {/* Logout */}
-          <div className="px-4 py-4 border-t border-gray-200">
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
-            >
-              <LogOut className="w-5 h-5 mr-3" />
-              Cerrar Sesión
-            </button>
+          {/* Footer */}
+          <div className="p-4 border-t">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-bold">A</span>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">Admin</p>
+                <p className="text-xs text-gray-500">artbiddo.es</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
     </>
   );
 }

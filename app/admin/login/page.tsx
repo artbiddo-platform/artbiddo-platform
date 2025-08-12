@@ -141,11 +141,7 @@ export default function AdminLogin() {
 
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Credenciales de Demo:</h3>
-            <div className="space-y-1 text-sm text-gray-600">
-              <p><strong>Admin:</strong> admin@artbiddo.com / admin123</p>
-              <p><strong>Moderador:</strong> moderator@artbiddo.com / admin123</p>
-            </div>
+
           </div>
         </div>
 
