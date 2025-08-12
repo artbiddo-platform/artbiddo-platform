@@ -1,23 +1,32 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
-interface AdminSidebarProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
-
-export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+export default function AdminSidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const menuItems = [
-    { id: 'dashboard', name: 'Dashboard', icon: '📊' },
-    { id: 'content', name: 'Contenido', icon: '📝' },
-    { id: 'auctions', name: 'Subastas', icon: '🎨' },
-    { id: 'users', name: 'Usuarios', icon: '👥' },
-    { id: 'reports', name: 'Reportes', icon: '📈' },
-    { id: 'settings', name: 'Configuración', icon: '⚙️' }
+    { id: 'dashboard', name: 'Dashboard', icon: '📊', path: '/admin/dashboard' },
+    { id: 'content', name: 'Contenido', icon: '📝', path: '/admin/content' },
+    { id: 'auctions', name: 'Subastas', icon: '🎨', path: '/admin/auctions' },
+    { id: 'users', name: 'Usuarios', icon: '👥', path: '/admin/users' },
+    { id: 'reports', name: 'Reportes', icon: '📈', path: '/admin/reports' },
+    { id: 'settings', name: 'Configuración', icon: '⚙️', path: '/admin/settings' }
   ];
+
+  const getActiveTab = () => {
+    const currentPath = pathname;
+    const activeItem = menuItems.find(item => item.path === currentPath);
+    return activeItem ? activeItem.id : 'dashboard';
+  };
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -65,13 +74,10 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
             {menuItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => {
-                  onTabChange(item.id);
-                  setIsMobileMenuOpen(false);
-                }}
-                  className={`
+                onClick={() => handleNavigation(item.path)}
+                className={`
                   w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors
-                  ${activeTab === item.id
+                  ${getActiveTab() === item.id
                     ? 'bg-blue-100 text-blue-700 border border-blue-200'
                     : 'text-gray-700 hover:bg-gray-100'
                   }

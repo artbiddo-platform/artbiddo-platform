@@ -24,7 +24,7 @@ interface AdminUser {
   avatar?: string;
 }
 
-export default function AdminSettings() {
+export default function SettingsManagement() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -113,7 +113,7 @@ export default function AdminSettings() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar activeTab="settings" onTabChange={() => {}} />
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">

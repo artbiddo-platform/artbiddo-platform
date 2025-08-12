@@ -24,7 +24,7 @@ interface AdminUser {
   avatar?: string;
 }
 
-export default function AdminReports() {
+export default function ReportsManagement() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState('30');
@@ -99,7 +99,7 @@ export default function AdminReports() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar activeTab="reports" onTabChange={() => {}} />
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">

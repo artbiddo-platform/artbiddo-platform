@@ -191,7 +191,7 @@ const mockUsers: User[] = [
   }
 ];
 
-export default function AdminUsers() {
+export default function UsersManagement() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -293,7 +293,7 @@ export default function AdminUsers() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar activeTab="users" onTabChange={() => {}} />
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">
@@ -310,9 +310,9 @@ export default function AdminUsers() {
                     onClick={() => setShowCreateModal(true)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
                   >
-                    <Plus className="w-5 h-5" />
-                    <span>Nuevo Usuario</span>
-                  </button>
+                  <Plus className="w-5 h-5" />
+                  <span>Nuevo Usuario</span>
+                </button>
                   <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                     <Upload className="w-5 h-5" />
                     <span>Importar</span>
@@ -354,45 +354,45 @@ export default function AdminUsers() {
             {/* List Tab */}
             {activeTab === 'list' && (
               <div className="space-y-6">
-                {/* Filters */}
+            {/* Filters */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    {/* Search */}
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="text"
-                        placeholder="Buscar usuarios..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Buscar usuarios..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
+                  />
+                </div>
 
-                    {/* Role Filter */}
-                    <div>
-                      <select
-                        value={roleFilter}
-                        onChange={(e) => setRoleFilter(e.target.value)}
+                {/* Role Filter */}
+                <div>
+                  <select
+                    value={roleFilter}
+                    onChange={(e) => setRoleFilter(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="all">Todos los roles</option>
-                        <option value="bidder">Pujadores</option>
-                        <option value="seller">Vendedores</option>
+                  >
+                    <option value="all">Todos los roles</option>
+                    <option value="bidder">Pujadores</option>
+                    <option value="seller">Vendedores</option>
                         <option value="admin">Administradores</option>
-                      </select>
-                    </div>
+                  </select>
+                </div>
 
-                    {/* Status Filter */}
-                    <div>
-                      <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
+                {/* Status Filter */}
+                <div>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="all">Todos los estados</option>
-                        <option value="active">Activos</option>
-                        <option value="suspended">Suspendidos</option>
+                  >
+                    <option value="all">Todos los estados</option>
+                    <option value="active">Activos</option>
+                    <option value="suspended">Suspendidos</option>
                         <option value="pending">Pendientes</option>
                         <option value="verified">Verificados</option>
                       </select>
@@ -408,37 +408,37 @@ export default function AdminUsers() {
                         <option value="all">Toda verificación</option>
                         <option value="verified">KYC Verificado</option>
                         <option value="unverified">KYC Pendiente</option>
-                      </select>
-                    </div>
-
-                    {/* Results Count */}
-                    <div className="flex items-center justify-end">
-                      <span className="text-sm text-gray-600">
-                        {filteredUsers.length} usuarios encontrados
-                      </span>
-                    </div>
-                  </div>
+                  </select>
                 </div>
 
-                {/* Users List */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                  <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Lista de Usuarios</h3>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Usuario
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {/* Results Count */}
+                <div className="flex items-center justify-end">
+                  <span className="text-sm text-gray-600">
+                    {filteredUsers.length} usuarios encontrados
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Users List */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Lista de Usuarios</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Usuario
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Rol & Estado
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actividad
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actividad
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Verificación
                           </th>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -446,54 +446,54 @@ export default function AdminUsers() {
                           </th>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Último Acceso
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Acciones
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredUsers.map((user) => (
-                          <tr key={user.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="w-10 h-10 rounded-full overflow-hidden">
-                                  <img
-                                    src={user.avatar}
-                                    alt={user.name}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                                <div className="ml-4">
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {user.name}
-                                  </div>
-                                  <div className="text-sm text-gray-500 flex items-center">
-                                    <Mail className="w-3 h-3 mr-1" />
-                                    {user.email}
-                                  </div>
-                                  <div className="text-sm text-gray-500 flex items-center">
-                                    <Phone className="w-3 h-3 mr-1" />
-                                    {user.phone}
-                                  </div>
-                                </div>
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredUsers.map((user) => (
+                      <tr key={user.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 rounded-full overflow-hidden">
+                              <img
+                                src={user.avatar}
+                                alt={user.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {user.name}
                               </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-500 flex items-center">
+                                <Mail className="w-3 h-3 mr-1" />
+                                {user.email}
+                              </div>
+                              <div className="text-sm text-gray-500 flex items-center">
+                                <Phone className="w-3 h-3 mr-1" />
+                                {user.phone}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                               <div className="space-y-1">
-                                {getRoleBadge(user.role)}
-                                {getStatusBadge(user.status)}
+                          {getRoleBadge(user.role)}
+                          {getStatusBadge(user.status)}
                               </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
                                 {user.role === 'bidder' ? (
                                   <>
-                                    <div className="flex items-center">
+                            <div className="flex items-center">
                                       <Gavel className="w-4 h-4 text-gray-400 mr-2" />
-                                      {user.totalBids} pujas
-                                    </div>
-                                    <div className="text-xs text-gray-500">
+                              {user.totalBids} pujas
+                            </div>
+                            <div className="text-xs text-gray-500">
                                       €{user.totalSpent.toLocaleString()} gastado
                                     </div>
                                   </>
@@ -522,7 +522,7 @@ export default function AdminUsers() {
                                 }`}>
                                   {user.isKYCVerified ? 'KYC OK' : 'KYC Pendiente'}
                                 </span>
-                              </div>
+                            </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="space-y-1">
@@ -532,68 +532,68 @@ export default function AdminUsers() {
                                 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTrustScoreColor(user.trustScore)}`}>
                                   Confianza: {user.trustScore}%
                                 </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
                                 <Clock className="w-4 h-4 text-gray-400 mr-2" />
-                                <span className="text-sm text-gray-900">
+                            <span className="text-sm text-gray-900">
                                   {new Date(user.lastLogin).toLocaleDateString()}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <div className="flex items-center justify-end space-x-2">
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex items-center justify-end space-x-2">
                                 <button 
                                   onClick={() => setSelectedUser(user)}
                                   className="text-blue-600 hover:text-blue-900 p-1"
                                   title="Ver detalles"
                                 >
-                                  <Eye className="w-4 h-4" />
-                                </button>
+                              <Eye className="w-4 h-4" />
+                            </button>
                                 <button className="text-green-600 hover:text-green-900 p-1" title="Editar">
-                                  <Edit className="w-4 h-4" />
-                                </button>
-                                {user.status === 'active' ? (
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            {user.status === 'active' ? (
                                   <button className="text-red-600 hover:text-red-900 p-1" title="Suspender">
                                     <Lock className="w-4 h-4" />
-                                  </button>
-                                ) : (
+                              </button>
+                            ) : (
                                   <button className="text-green-600 hover:text-green-900 p-1" title="Activar">
                                     <Unlock className="w-4 h-4" />
-                                  </button>
-                                )}
+                              </button>
+                            )}
                                 <button className="text-red-600 hover:text-red-900 p-1" title="Eliminar">
                                   <Trash2 className="w-4 h-4" />
                                 </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-                {/* Empty State */}
-                {filteredUsers.length === 0 && (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Users className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron usuarios</h3>
-                    <p className="text-gray-500 mb-6">
-                      No hay usuarios que coincidan con los filtros aplicados.
-                    </p>
+            {/* Empty State */}
+            {filteredUsers.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron usuarios</h3>
+                <p className="text-gray-500 mb-6">
+                  No hay usuarios que coincidan con los filtros aplicados.
+                </p>
                     <button 
                       onClick={() => setShowCreateModal(true)}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                     >
-                      Crear Nuevo Usuario
-                    </button>
-                  </div>
-                )}
+                  Crear Nuevo Usuario
+                </button>
               </div>
+            )}
+          </div>
             )}
 
             {/* Analytics Tab */}
@@ -811,8 +811,8 @@ export default function AdminUsers() {
               <button className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors">
                 Crear Usuario
               </button>
-            </div>
-          </div>
+        </div>
+      </div>
         </div>
       )}
     </div>

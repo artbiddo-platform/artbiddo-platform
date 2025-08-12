@@ -213,7 +213,7 @@ export default function AdminAuctions() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar activeTab="auctions" onTabChange={() => {}} />
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">
@@ -230,9 +230,9 @@ export default function AdminAuctions() {
                     onClick={() => setShowCreateModal(true)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
                   >
-                    <Plus className="w-5 h-5" />
-                    <span>Nueva Subasta</span>
-                  </button>
+                  <Plus className="w-5 h-5" />
+                  <span>Nueva Subasta</span>
+                </button>
                   <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
                     <Upload className="w-5 h-5" />
                     <span>Importar</span>
@@ -274,26 +274,26 @@ export default function AdminAuctions() {
             {/* List Tab */}
             {activeTab === 'list' && (
               <div className="space-y-6">
-                {/* Filters */}
+            {/* Filters */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {/* Search */}
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="text"
-                        placeholder="Buscar subastas..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Buscar subastas..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
+                  />
+                </div>
 
-                    {/* Status Filter */}
-                    <div>
-                      <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
+                {/* Status Filter */}
+                <div>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="all">Todos los estados</option>
@@ -316,104 +316,104 @@ export default function AdminAuctions() {
                         <option value="Arte Contemporáneo">Arte Contemporáneo</option>
                         <option value="Pintura Clásica">Pintura Clásica</option>
                         <option value="Escultura">Escultura</option>
-                      </select>
-                    </div>
-
-                    {/* Results Count */}
-                    <div className="flex items-center justify-end">
-                      <span className="text-sm text-gray-600">
-                        {filteredAuctions.length} subastas encontradas
-                      </span>
-                    </div>
-                  </div>
+                  </select>
                 </div>
 
-                {/* Auctions List */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                  <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Lista de Subastas</h3>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Subasta
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Estado
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {/* Results Count */}
+                <div className="flex items-center justify-end">
+                  <span className="text-sm text-gray-600">
+                    {filteredAuctions.length} subastas encontradas
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Auctions List */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Lista de Subastas</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Subasta
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Estado
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Métricas
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Ingresos
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Ingresos
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Tiempo
                           </th>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Seguridad
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Acciones
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
                         {filteredAuctions.map((auction) => (
-                          <tr key={auction.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div>
+                        <tr key={auction.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div>
                                 <div className="flex items-center">
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {auction.title}
+                              <div className="text-sm font-medium text-gray-900">
+                                {auction.title}
                                   </div>
                                   {auction.isVerified && (
                                     <CheckCircle className="w-4 h-4 text-green-500 ml-2" />
                                   )}
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                  {auction.description}
-                                </div>
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {auction.description}
+                              </div>
                                 <div className="text-xs text-gray-400">
                                   {auction.category}
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                               {getStatusBadge(auction.status)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm text-gray-900">
-                                <div className="flex items-center">
-                                  <Users className="w-4 h-4 text-gray-400 mr-2" />
+                            <div className="flex items-center">
+                              <Users className="w-4 h-4 text-gray-400 mr-2" />
                                   {auction.participants} participantes
                                 </div>
                                 <div className="text-xs text-gray-500">
                                   {auction.totalBids} pujas • {auction.totalArtworks} obras
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm text-gray-900">
-                                <div className="flex items-center">
-                                  <DollarSign className="w-4 h-4 text-green-500 mr-2" />
+                            <div className="flex items-center">
+                              <DollarSign className="w-4 h-4 text-green-500 mr-2" />
                                   €{auction.totalRevenue.toLocaleString()}
                                 </div>
                                 <div className="text-xs text-gray-500">
                                   Comisión: €{auction.commission.toLocaleString()}
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
                                 <Clock className="w-4 h-4 text-gray-400 mr-2" />
-                                <span className="text-sm text-gray-900">
+                              <span className="text-sm text-gray-900">
                                   {getTimeRemaining(auction.endDate)}
-                                </span>
-                              </div>
-                            </td>
+                              </span>
+                            </div>
+                          </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center space-x-2">
                                 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getFraudScoreColor(auction.fraudScore)}`}>
@@ -424,18 +424,18 @@ export default function AdminAuctions() {
                                 )}
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <div className="flex items-center justify-end space-x-2">
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex items-center justify-end space-x-2">
                                 <button 
                                   onClick={() => setSelectedAuction(auction)}
                                   className="text-blue-600 hover:text-blue-900 p-1"
                                   title="Ver detalles"
                                 >
-                                  <Eye className="w-4 h-4" />
-                                </button>
+                                <Eye className="w-4 h-4" />
+                              </button>
                                 <button className="text-green-600 hover:text-green-900 p-1" title="Editar">
-                                  <Edit className="w-4 h-4" />
-                                </button>
+                                <Edit className="w-4 h-4" />
+                              </button>
                                 {auction.status === 'active' && (
                                   <button className="text-yellow-600 hover:text-yellow-900 p-1" title="Pausar">
                                     <Pause className="w-4 h-4" />
@@ -447,36 +447,36 @@ export default function AdminAuctions() {
                                   </button>
                                 )}
                                 <button className="text-red-600 hover:text-red-900 p-1" title="Eliminar">
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-                {/* Empty State */}
-                {filteredAuctions.length === 0 && (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Gavel className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron subastas</h3>
-                    <p className="text-gray-500 mb-6">
-                      No hay subastas que coincidan con los filtros aplicados.
-                    </p>
+            {/* Empty State */}
+            {filteredAuctions.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Gavel className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron subastas</h3>
+                <p className="text-gray-500 mb-6">
+                  No hay subastas que coincidan con los filtros aplicados.
+                </p>
                     <button 
                       onClick={() => setShowCreateModal(true)}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                     >
-                      Crear Nueva Subasta
-                    </button>
-                  </div>
-                )}
+                  Crear Nueva Subasta
+                </button>
               </div>
+            )}
+          </div>
             )}
 
             {/* Analytics Tab */}
@@ -681,8 +681,8 @@ export default function AdminAuctions() {
               <button className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors">
                 Crear Subasta
               </button>
-            </div>
-          </div>
+        </div>
+      </div>
         </div>
       )}
     </div>

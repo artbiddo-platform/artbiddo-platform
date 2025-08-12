@@ -4,183 +4,117 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import { 
+  BarChart3, 
+  DollarSign, 
+  Shield, 
+  Activity, 
   TrendingUp, 
   TrendingDown, 
-  DollarSign, 
   Users, 
-  Gavel, 
-  Eye,
-  AlertTriangle,
-  CheckCircle,
+  ShoppingCart, 
+  Eye, 
+  CheckCircle, 
+  AlertTriangle, 
+  Bell, 
+  Settings,
   Clock,
   Calendar,
-  BarChart3,
-  PieChart,
-  Activity,
-  Shield,
-  Zap,
   Target,
-  Award,
-  CreditCard,
-  FileText,
-  Settings,
-  Bell
+  Zap
 } from 'lucide-react';
 
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  avatar?: string;
-}
-
 export default function AdminDashboard() {
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for demonstration
-  const [dashboardData] = useState({
+  // Mock data for dashboard
+  const dashboardData = {
     overview: {
-      totalRevenue: 2847500,
+      totalRevenue: 1250000,
       revenueChange: 12.5,
-      activeAuctions: 8,
-      auctionsChange: -2,
-      totalUsers: 1247,
-      usersChange: 8.3,
-      totalBids: 3421,
-      bidsChange: 15.7
+      totalUsers: 15420,
+      userChange: 8.3,
+      activeAuctions: 45,
+      auctionChange: -2.1,
+      totalBids: 8920,
+      bidChange: 15.7
     },
     financial: {
-      monthlyRevenue: [125000, 145000, 132000, 158000, 142000, 168000, 175000, 189000, 201000, 198000, 215000, 2847500],
-      commissionEarned: 284750,
-      pendingPayments: 125000,
-      refundsIssued: 8500
+      monthlyRevenue: [45000, 52000, 48000, 61000, 58000, 72000, 68000, 75000, 82000, 78000, 85000, 92000],
+      commission: 125000,
+      fees: 45000,
+      refunds: 8500,
+      pending: 23000
     },
     security: {
-      failedLogins: 23,
-      suspiciousActivity: 5,
-      blockedUsers: 3,
-      securityScore: 94
+      securityScore: 94,
+      suspiciousActivity: 3,
+      blockedUsers: 12,
+      failedLogins: 28,
+      lastBackup: '2024-01-15 14:30:00'
     },
     recentActivity: [
-      {
-        id: 1,
-        type: 'bid',
-        user: 'María González',
-        action: 'Pujó €15,000 en "Obra de Picasso"',
-        time: '2 minutos',
-        amount: 15000
-      },
-      {
-        id: 2,
-        type: 'auction',
-        user: 'Sistema',
-        action: 'Subasta "Arte Contemporáneo" finalizada',
-        time: '15 minutos',
-        amount: 45000
-      },
-      {
-        id: 3,
-        type: 'payment',
-        user: 'Carlos Rodríguez',
-        action: 'Pago procesado por €8,500',
-        time: '1 hora',
-        amount: 8500
-      },
-      {
-        id: 4,
-        type: 'user',
-        user: 'Ana Martínez',
-        action: 'Nuevo usuario registrado',
-        time: '2 horas',
-        amount: 0
-      },
-      {
-        id: 5,
-        type: 'alert',
-        user: 'Sistema',
-        action: 'Actividad sospechosa detectada',
-        time: '3 horas',
-        amount: 0
-      }
-    ],
-    alerts: [
-      {
-        id: 1,
-        type: 'warning',
-        title: 'Pago pendiente',
-        message: '3 pagos pendientes por más de 24 horas',
-        time: '1 hora'
-      },
-      {
-        id: 2,
-        type: 'error',
-        title: 'Error de sistema',
-        message: 'Problema con el procesamiento de pagos',
-        time: '2 horas'
-      },
-      {
-        id: 3,
-        type: 'info',
-        title: 'Mantenimiento programado',
-        message: 'Sistema offline mañana de 2:00 a 4:00 AM',
-        time: '1 día'
-      }
+      { id: 1, user: 'María García', action: 'Ganó subasta #1234', amount: 2500, time: 'Hace 2 minutos', type: 'bid' },
+      { id: 2, user: 'Carlos López', action: 'Registró nueva cuenta', amount: 0, time: 'Hace 5 minutos', type: 'user' },
+      { id: 3, user: 'Ana Martínez', action: 'Subió obra de arte', amount: 0, time: 'Hace 8 minutos', type: 'artwork' },
+      { id: 4, user: 'Luis Rodríguez', action: 'Realizó puja de €1,200', amount: 1200, time: 'Hace 12 minutos', type: 'bid' },
+      { id: 5, user: 'Sistema', action: 'Backup automático completado', amount: 0, time: 'Hace 15 minutos', type: 'system' }
     ]
-  });
+  };
 
+  // Authentication check
   useEffect(() => {
-    const adminUser = localStorage.getItem('adminUser');
-    if (!adminUser) {
-      router.push('/admin/login');
-      return;
-    }
+    const checkAuth = () => {
+      const token = localStorage.getItem('adminToken');
+      const user = localStorage.getItem('adminUser');
+      
+      if (!token || !user) {
+        router.push('/admin/login');
+        return;
+      }
+      
+      try {
+        const userData = JSON.parse(user);
+        if (userData.role !== 'admin') {
+          router.push('/admin/login');
+          return;
+        }
+        setIsAuthenticated(true);
+      } catch (error) {
+        router.push('/admin/login');
+        return;
+      }
+      
+      setIsLoading(false);
+    };
 
-    try {
-      const userData = JSON.parse(adminUser);
-      setUser(userData);
-    } catch (error) {
-      router.push('/admin/login');
-    } finally {
-      setLoading(false);
-    }
+    checkAuth();
   }, [router]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando acceso...</p>
         </div>
       </div>
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated) {
     return null;
   }
 
   const getActivityIcon = (type: string) => {
     switch (type) {
-      case 'bid': return <Gavel className="w-4 h-4 text-blue-500" />;
-      case 'auction': return <Calendar className="w-4 h-4 text-green-500" />;
-      case 'payment': return <CreditCard className="w-4 h-4 text-purple-500" />;
-      case 'user': return <Users className="w-4 h-4 text-orange-500" />;
-      case 'alert': return <AlertTriangle className="w-4 h-4 text-red-500" />;
-      default: return <Activity className="w-4 h-4 text-gray-500" />;
-    }
-  };
-
-  const getAlertIcon = (type: string) => {
-    switch (type) {
-      case 'warning': return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
-      case 'error': return <AlertTriangle className="w-5 h-5 text-red-500" />;
-      case 'info': return <Bell className="w-5 h-5 text-blue-500" />;
-      default: return <Bell className="w-5 h-5 text-gray-500" />;
+      case 'bid': return <ShoppingCart className="w-4 h-4 text-green-500" />;
+      case 'user': return <Users className="w-4 h-4 text-blue-500" />;
+      case 'artwork': return <Eye className="w-4 h-4 text-purple-500" />;
+      case 'system': return <Settings className="w-4 h-4 text-gray-500" />;
+      default: return <Bell className="w-4 h-4 text-gray-500" />;
     }
   };
 
@@ -188,7 +122,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar activeTab="dashboard" onTabChange={() => {}} />
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">
@@ -278,36 +212,52 @@ export default function AdminDashboard() {
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Subastas Activas</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.overview.activeAuctions}</p>
+                        <p className="text-sm font-medium text-gray-600">Usuarios Activos</p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {dashboardData.overview.totalUsers.toLocaleString()}
+                        </p>
                       </div>
-                      <div className="p-2 rounded-full bg-blue-100">
-                        <Gavel className="w-6 h-6 text-blue-600" />
+                      <div className={`p-2 rounded-full ${
+                        dashboardData.overview.userChange > 0 ? 'bg-green-100' : 'bg-red-100'
+                      }`}>
+                        {dashboardData.overview.userChange > 0 ? (
+                          <TrendingUp className="w-6 h-6 text-green-600" />
+                        ) : (
+                          <TrendingDown className="w-6 h-6 text-red-600" />
+                        )}
                       </div>
                     </div>
                     <div className="mt-4">
                       <span className={`text-sm font-medium ${
-                        dashboardData.overview.auctionsChange > 0 ? 'text-green-600' : 'text-red-600'
+                        dashboardData.overview.userChange > 0 ? 'text-green-600' : 'text-red-600'
                       }`}>
-                        {dashboardData.overview.auctionsChange > 0 ? '+' : ''}{dashboardData.overview.auctionsChange}
+                        {dashboardData.overview.userChange > 0 ? '+' : ''}{dashboardData.overview.userChange}%
                       </span>
-                      <span className="text-sm text-gray-600"> vs semana anterior</span>
+                      <span className="text-sm text-gray-600"> vs mes anterior</span>
                     </div>
                   </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Usuarios Registrados</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.overview.totalUsers.toLocaleString()}</p>
+                        <p className="text-sm font-medium text-gray-600">Subastas Activas</p>
+                        <p className="text-2xl font-bold text-gray-900">{dashboardData.overview.activeAuctions}</p>
                       </div>
-                      <div className="p-2 rounded-full bg-purple-100">
-                        <Users className="w-6 h-6 text-purple-600" />
+                      <div className={`p-2 rounded-full ${
+                        dashboardData.overview.auctionChange > 0 ? 'bg-green-100' : 'bg-red-100'
+                      }`}>
+                        {dashboardData.overview.auctionChange > 0 ? (
+                          <TrendingUp className="w-6 h-6 text-green-600" />
+                        ) : (
+                          <TrendingDown className="w-6 h-6 text-red-600" />
+                        )}
                       </div>
                     </div>
                     <div className="mt-4">
-                      <span className="text-sm font-medium text-green-600">
-                        +{dashboardData.overview.usersChange}%
+                      <span className={`text-sm font-medium ${
+                        dashboardData.overview.auctionChange > 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {dashboardData.overview.auctionChange > 0 ? '+' : ''}{dashboardData.overview.auctionChange}%
                       </span>
                       <span className="text-sm text-gray-600"> vs mes anterior</span>
                     </div>
@@ -317,67 +267,112 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">Total de Pujas</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.overview.totalBids.toLocaleString()}</p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {dashboardData.overview.totalBids.toLocaleString()}
+                        </p>
                       </div>
-                      <div className="p-2 rounded-full bg-orange-100">
-                        <Target className="w-6 h-6 text-orange-600" />
+                      <div className={`p-2 rounded-full ${
+                        dashboardData.overview.bidChange > 0 ? 'bg-green-100' : 'bg-red-100'
+                      }`}>
+                        {dashboardData.overview.bidChange > 0 ? (
+                          <TrendingUp className="w-6 h-6 text-green-600" />
+                        ) : (
+                          <TrendingDown className="w-6 h-6 text-red-600" />
+                        )}
                       </div>
                     </div>
                     <div className="mt-4">
-                      <span className="text-sm font-medium text-green-600">
-                        +{dashboardData.overview.bidsChange}%
+                      <span className={`text-sm font-medium ${
+                        dashboardData.overview.bidChange > 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {dashboardData.overview.bidChange > 0 ? '+' : ''}{dashboardData.overview.bidChange}%
                       </span>
                       <span className="text-sm text-gray-600"> vs mes anterior</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Alerts and Recent Activity */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Alerts */}
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div className="px-6 py-4 border-b border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900">Alertas del Sistema</h3>
+                {/* Quick Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <Zap className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Acciones Rápidas</h3>
+                        <p className="text-gray-600">Gestiona tu plataforma</p>
+                      </div>
                     </div>
-                    <div className="p-6">
-                      <div className="space-y-4">
-                        {dashboardData.alerts.map((alert) => (
-                          <div key={alert.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                            {getAlertIcon(alert.type)}
-                            <div className="flex-1">
-                              <h4 className="text-sm font-medium text-gray-900">{alert.title}</h4>
-                              <p className="text-sm text-gray-600">{alert.message}</p>
-                              <p className="text-xs text-gray-500 mt-1">{alert.time}</p>
-                            </div>
-                          </div>
-                        ))}
+                    <div className="mt-4 space-y-2">
+                      <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">
+                        Crear Nueva Subasta
+                      </button>
+                      <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">
+                        Ver Reportes
+                      </button>
+                      <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">
+                        Configurar Sistema
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <Target className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Objetivos</h3>
+                        <p className="text-gray-600">Metas del mes</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      <div>
+                        <div className="flex justify-between text-sm">
+                          <span>Ingresos</span>
+                          <span>75%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                          <div className="bg-green-600 h-2 rounded-full" style={{ width: '75%' }}></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-sm">
+                          <span>Usuarios</span>
+                          <span>90%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '90%' }}></div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Recent Activity */}
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div className="px-6 py-4 border-b border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900">Actividad Reciente</h3>
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-purple-100 rounded-lg">
+                        <Clock className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Próximos Eventos</h3>
+                        <p className="text-gray-600">Subastas programadas</p>
+                      </div>
                     </div>
-                    <div className="p-6">
-                      <div className="space-y-4">
-                        {dashboardData.recentActivity.map((activity) => (
-                          <div key={activity.id} className="flex items-start space-x-3">
-                            {getActivityIcon(activity.type)}
-                            <div className="flex-1">
-                              <p className="text-sm text-gray-900">
-                                <span className="font-medium">{activity.user}</span> {activity.action}
-                              </p>
-                              <p className="text-xs text-gray-500">{activity.time}</p>
-                            </div>
-                            {activity.amount > 0 && (
-                              <span className="text-sm font-medium text-green-600">
-                                €{activity.amount.toLocaleString()}
-                              </span>
-                            )}
-                          </div>
-                        ))}
+                    <div className="mt-4 space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Subasta Contemporánea</p>
+                          <p className="text-xs text-gray-500">En 2 días</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Subasta Clásica</p>
+                          <p className="text-xs text-gray-500">En 5 días</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -388,14 +383,24 @@ export default function AdminDashboard() {
             {/* Financial Tab */}
             {activeTab === 'financial' && (
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Comisiones Ganadas</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          €{dashboardData.financial.commissionEarned.toLocaleString()}
-                        </p>
+                        <p className="text-sm font-medium text-gray-600">Comisiones</p>
+                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.commission.toLocaleString()}</p>
+                      </div>
+                      <div className="p-2 rounded-full bg-blue-100">
+                        <DollarSign className="w-6 h-6 text-blue-600" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Tarifas</p>
+                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.fees.toLocaleString()}</p>
                       </div>
                       <div className="p-2 rounded-full bg-green-100">
                         <DollarSign className="w-6 h-6 text-green-600" />
@@ -406,13 +411,11 @@ export default function AdminDashboard() {
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Pagos Pendientes</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          €{dashboardData.financial.pendingPayments.toLocaleString()}
-                        </p>
+                        <p className="text-sm font-medium text-gray-600">Reembolsos</p>
+                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.refunds.toLocaleString()}</p>
                       </div>
-                      <div className="p-2 rounded-full bg-yellow-100">
-                        <Clock className="w-6 h-6 text-yellow-600" />
+                      <div className="p-2 rounded-full bg-red-100">
+                        <DollarSign className="w-6 h-6 text-red-600" />
                       </div>
                     </div>
                   </div>
@@ -420,24 +423,12 @@ export default function AdminDashboard() {
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Reembolsos Emitidos</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          €{dashboardData.financial.refundsIssued.toLocaleString()}
-                        </p>
+                        <p className="text-sm font-medium text-gray-600">Pendiente</p>
+                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.pending.toLocaleString()}</p>
                       </div>
-                      <div className="p-2 rounded-full bg-red-100">
-                        <CreditCard className="w-6 h-6 text-red-600" />
+                      <div className="p-2 rounded-full bg-yellow-100">
+                        <Clock className="w-6 h-6 text-yellow-600" />
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Ingresos Mensuales</h3>
-                  <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-600">Gráfico de ingresos mensuales</p>
                     </div>
                   </div>
                 </div>
@@ -448,18 +439,6 @@ export default function AdminDashboard() {
             {activeTab === 'security' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Intentos Fallidos</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.security.failedLogins}</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-red-100">
-                        <AlertTriangle className="w-6 h-6 text-red-600" />
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -492,6 +471,18 @@ export default function AdminDashboard() {
                       </div>
                       <div className="p-2 rounded-full bg-green-100">
                         <CheckCircle className="w-6 h-6 text-green-600" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Logins Fallidos</p>
+                        <p className="text-2xl font-bold text-gray-900">{dashboardData.security.failedLogins}</p>
+                      </div>
+                      <div className="p-2 rounded-full bg-red-100">
+                        <AlertTriangle className="w-6 h-6 text-red-600" />
                       </div>
                     </div>
                   </div>
