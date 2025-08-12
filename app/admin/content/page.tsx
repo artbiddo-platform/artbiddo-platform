@@ -1,10 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ContentManagement() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('home');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [content, setContent] = useState<any>({
+    header: {
+      logo: 'ARTBIDDO',
+      menuItems: [
+        { name: 'Subastas', href: '/subastas' },
+        { name: 'Categorías', href: '/categorias' },
+        { name: 'Artistas', href: '/artistas' },
+        { name: 'Sobre Nosotros', href: '/sobre-nosotros' }
+      ]
+    },
     home: {
       hero: {
         title: 'Descubre Obras de Arte Únicas',
@@ -59,6 +72,36 @@ export default function ContentManagement() {
   const [editing, setEditing] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
 
+  // Authentication check
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('adminToken');
+      const user = localStorage.getItem('adminUser');
+      
+      if (!token || !user) {
+        router.push('/admin/login');
+        return;
+      }
+      
+      // Simple token validation (in production, validate with backend)
+      try {
+        const userData = JSON.parse(user);
+        if (userData.role !== 'admin') {
+          router.push('/admin/login');
+          return;
+        }
+        setIsAuthenticated(true);
+      } catch (error) {
+        router.push('/admin/login');
+        return;
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
   const handleEdit = (path: string, value: string) => {
     setEditing(path);
     setEditValue(value);
@@ -94,6 +137,27 @@ export default function ContentManagement() {
     reader.readAsDataURL(file);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    router.push('/admin/login');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando acceso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -115,6 +179,12 @@ export default function ContentManagement() {
               <button className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                 Vista Previa
               </button>
+              <button 
+                onClick={handleLogout}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Cerrar Sesión
+              </button>
             </div>
           </div>
         </div>
@@ -128,6 +198,7 @@ export default function ContentManagement() {
               <h2 className="text-lg font-semibold mb-4">Secciones</h2>
               <nav className="space-y-2">
                 {[
+                  { id: 'header', name: 'Header/Navegación', icon: '🔝' },
                   { id: 'home', name: 'Página Principal', icon: '🏠' },
                   { id: 'about', name: 'Sobre Nosotros', icon: 'ℹ️' },
                   { id: 'contact', name: 'Contacto', icon: '📞' },
@@ -158,6 +229,74 @@ export default function ContentManagement() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-lg shadow">
+              {/* Header/Navigation Content */}
+              {activeTab === 'header' && (
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold mb-6">Header & Navegación</h2>
+                  
+                  {/* Logo */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-medium mb-4 text-gray-900">Logo</h3>
+                    <div className="border rounded-lg p-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Texto del Logo
+                      </label>
+                      {editing === 'header.logo' ? (
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                          <button
+                            onClick={() => handleSave('header.logo')}
+                            className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            onClick={handleCancel}
+                            className="bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex justify-between items-center">
+                          <p className="text-gray-900 font-bold text-xl">{content.header.logo}</p>
+                          <button
+                            onClick={() => handleEdit('header.logo', content.header.logo)}
+                            className="text-blue-600 hover:text-blue-800"
+                          >
+                            ✏️ Editar
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-medium mb-4 text-gray-900">Elementos del Menú</h3>
+                    <div className="space-y-4">
+                      {content.header.menuItems.map((item: any, index: number) => (
+                        <div key={index} className="border rounded-lg p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-medium text-gray-900">Elemento {index + 1}</h4>
+                            <button className="text-blue-600 hover:text-blue-800">
+                              ✏️ Editar
+                            </button>
+                          </div>
+                          <p className="text-gray-700 mb-2"><strong>Nombre:</strong> {item.name}</p>
+                          <p className="text-gray-700"><strong>Enlace:</strong> {item.href}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Home Page Content */}
               {activeTab === 'home' && (
           <div className="p-6">
