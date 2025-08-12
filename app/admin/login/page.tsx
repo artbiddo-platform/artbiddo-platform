@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react';
 
 interface LoginCredentials {
   email: string;
@@ -19,46 +19,60 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Credenciales de administrador hardcodeadas
+  const ADMIN_CREDENTIALS = {
+    email: 'admin@artbiddo.com',
+    password: 'ArtBiddo2024!'
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
+    // Simular delay de red
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials)
-      });
+      // Verificar credenciales
+      if (credentials.email === ADMIN_CREDENTIALS.email && 
+          credentials.password === ADMIN_CREDENTIALS.password) {
+        
+        // Crear token y datos de usuario
+        const adminUser = {
+          id: '1',
+          email: credentials.email,
+          name: 'Administrador ArtBiddo',
+          role: 'admin',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+        };
 
-      const data = await response.json();
+        const token = 'admin-token-' + Date.now();
 
-      if (response.ok) {
-        // Verificar si el usuario es admin
-        if (data.user.role === 'ADMIN') {
-          localStorage.setItem('adminToken', data.token);
-          localStorage.setItem('adminUser', JSON.stringify(data.user));
-          router.push('/admin/dashboard');
-        } else {
-          setError('Acceso denegado. Solo administradores pueden acceder.');
-        }
+        // Guardar en localStorage
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('adminUser', JSON.stringify(adminUser));
+
+        // Redirigir al dashboard
+        router.push('/admin/dashboard');
       } else {
-        setError(data.error || 'Credenciales inválidas');
+        setError('Credenciales incorrectas. Verifica tu email y contraseña.');
       }
     } catch (err) {
-      setError('Error al iniciar sesión');
+      setError('Error al iniciar sesión. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-8 h-8 text-white" />
+          </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Panel Administrativo
           </h1>
@@ -83,7 +97,7 @@ export default function AdminLogin() {
                   required
                   value={credentials.email}
                   onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="admin@artbiddo.com"
                 />
               </div>
@@ -102,7 +116,7 @@ export default function AdminLogin() {
                   required
                   value={credentials.password}
                   onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   placeholder="••••••••"
                 />
                 <button
@@ -126,7 +140,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
             >
               {loading ? (
                 <div className="flex items-center space-x-2">
@@ -140,8 +154,21 @@ export default function AdminLogin() {
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <h3 className="text-sm font-semibold text-blue-900 mb-2">🔑 Credenciales de Administrador</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-blue-700">Email:</span>
+                <span className="font-mono text-blue-900">admin@artbiddo.com</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-blue-700">Contraseña:</span>
+                <span className="font-mono text-blue-900">ArtBiddo2024!</span>
+              </div>
+            </div>
+            <p className="text-xs text-blue-600 mt-2">
+              ⚠️ Estas credenciales son para desarrollo. Cambia en producción.
+            </p>
           </div>
         </div>
 
@@ -149,7 +176,7 @@ export default function AdminLogin() {
         <div className="text-center mt-6">
           <a
             href="/"
-            className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
           >
             ← Volver al sitio principal
           </a>
