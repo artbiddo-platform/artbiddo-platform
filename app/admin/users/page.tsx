@@ -167,7 +167,7 @@ export default function AdminUsers() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar user={user} />
+        <AdminSidebar activeTab="users" onTabChange={() => {}} />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">

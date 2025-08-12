@@ -69,7 +69,7 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
                   onTabChange(item.id);
                   setIsMobileMenuOpen(false);
                 }}
-                className={`
+                  className={`
                   w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors
                   ${activeTab === item.id
                     ? 'bg-blue-100 text-blue-700 border border-blue-200'

@@ -93,7 +93,7 @@ export default function AdminAuctions() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <AdminSidebar user={user} />
+        <AdminSidebar activeTab="auctions" onTabChange={() => {}} />
 
         {/* Main Content */}
         <div className="flex-1 lg:ml-0">
