@@ -124,14 +124,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar que el usuario no sea el vendedor
-    if (user.id === artwork.sellerId) {
-      return NextResponse.json(
-        { error: 'No puedes pujar en tu propia obra' },
-        { status: 400 }
-      );
-    }
-
     // Crear la puja en una transacción
     const result = await prisma.$transaction(async (tx) => {
       // Crear la nueva puja
