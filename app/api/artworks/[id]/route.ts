@@ -13,11 +13,6 @@ export async function GET(
           select: {
             name: true
           }
-        },
-        seller: {
-          select: {
-            name: true
-          }
         }
       }
     });
