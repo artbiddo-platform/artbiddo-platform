@@ -378,7 +378,7 @@ export default function AdminAuctions() {
                               </div>
                                 <div className="text-xs text-gray-400">
                                   {auction.category}
-                                </div>
+                              </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -422,8 +422,8 @@ export default function AdminAuctions() {
                                 {auction.fraudScore > 5 && (
                                   <AlertTriangle className="w-4 h-4 text-red-500" />
                                 )}
-                              </div>
-                            </td>
+                            </div>
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex items-center justify-end space-x-2">
                                 <button 

@@ -94,10 +94,10 @@ export default function ContentManagement() {
     } catch (error) {
         router.push('/admin/login');
         return;
-      }
+    }
       
       setIsLoading(false);
-    };
+  };
 
     checkAuth();
   }, [router]);
@@ -208,23 +208,23 @@ export default function ContentManagement() {
                   ) : (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-900">{getValue(content, 'header.logo')}</span>
-                      <button
+                <button
                         onClick={() => handleEdit('header.logo', getValue(content, 'header.logo'))}
                         className="text-blue-600 hover:text-blue-800"
                       >
                         Editar
-                      </button>
+                </button>
                     </div>
                   )}
                 </div>
               </div>
-            </div>
+          </div>
 
             {/* Home Content */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Página Principal</h2>
               <div className="space-y-4">
-                <div>
+              <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Título Hero
                   </label>
@@ -260,15 +260,15 @@ export default function ContentManagement() {
                       </button>
                     </div>
                   )}
+                    </div>
                 </div>
               </div>
-            </div>
 
             {/* About Content */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Sobre Nosotros</h2>
               <div className="space-y-4">
-                <div>
+              <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Contenido
                   </label>
@@ -293,8 +293,8 @@ export default function ContentManagement() {
                         >
                           Cancelar
                         </button>
-                      </div>
-                    </div>
+                </div>
+              </div>
                   ) : (
                     <div className="flex justify-between items-start">
                       <p className="text-gray-900 flex-1">{getValue(content, 'about.content')}</p>
@@ -306,8 +306,8 @@ export default function ContentManagement() {
                       </button>
                     </div>
                   )}
+                    </div>
                 </div>
-              </div>
             </div>
 
             {/* Contact Content */}
@@ -348,8 +348,8 @@ export default function ContentManagement() {
                       >
                         Editar
                       </button>
-                    </div>
-                  )}
+              </div>
+            )}
                 </div>
               </div>
             </div>

@@ -21,15 +21,20 @@ model User {
   address       String?
   verified      Boolean   @default(false)
   balance       Float     @default(0)
+  tokens        Int       @default(0) // Sistema de tokens virtuales
   totalBids     Int       @default(0)
   totalPurchases Int      @default(0)
+  totalSpent    Float     @default(0)
+  kycStatus     KYCStatus @default(PENDING)
+  fraudScore    Int       @default(0)
+  trustScore    Int       @default(100)
+  lastLogin     DateTime?
   stripeCustomerId String? @unique
   stripeAccountId String? @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   // Relations
-  artworks      Artwork[] @relation("SellerArtworks")
   bids          Bid[]
   favorites     Favorite[]
   notifications Notification[]
@@ -38,6 +43,8 @@ model User {
   transactions  Transaction[]
   tickets       Ticket[]  @relation("UserTickets")
   ticketReplies TicketReply[] @relation("UserTicketReplies")
+  tokenPurchases TokenPurchase[]
+  sellerRequests SellerRequest[] // Solicitudes para vender obras
 
   @@map("users")
 }
@@ -67,31 +74,41 @@ model Artwork {
   medium         String
   dimensions     String
   image          String
+  images         String[]      // Múltiples imágenes
   startingPrice  Float
   currentPrice   Float
   estimatedValue Float
+  reservePrice   Float?        // Precio de reserva
   status         ArtworkStatus @default(ACTIVE)
+  saleType       SaleType      @default(AUCTION) // AUCTION, DIRECT_SALE, BOTH
   endDate        DateTime
   totalBids      Int           @default(0)
   views          Int           @default(0)
   favorites      Int           @default(0)
+  isArtBiddoOwned Boolean      @default(true) // Solo ArtBiddo puede vender
+  commission     Float?        // Comisión si es obra de terceros
+  originalSeller String?       // Vendedor original si es obra de terceros
+  certificate    String?       // Certificado de autenticidad
+  provenance     String?       // Procedencia de la obra
+  condition      String?       // Estado de conservación
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
   // Relations
   category       Category      @relation(fields: [categoryId], references: [id])
-  seller         User          @relation("SellerArtworks", fields: [sellerId], references: [id])
-  sellerId       String
   bids           Bid[]
   artworkFavorites Favorite[]
   transactions   Transaction[]
+  botActivity    BotActivity[]
 
   @@map("artworks")
 }
 
 model Bid {
   id        String   @id @default(cuid())
-  amount    Float
+  amount    Int      // Cantidad en tokens (1 token = 1 puja)
+  isBot     Boolean  @default(false) // Indica si es puja de bot
+  botType   BotType? // Tipo de bot si aplica
   status    BidStatus @default(ACTIVE)
   createdAt DateTime @default(now())
 
@@ -152,6 +169,7 @@ model Transaction {
   id          String            @id @default(cuid())
   type        TransactionType
   amount      Float
+  tokens      Int?              // Cantidad de tokens involucrados
   description String
   status      TransactionStatus @default(PENDING)
   createdAt   DateTime          @default(now())
@@ -163,6 +181,97 @@ model Transaction {
   artworkId   String?
 
   @@map("transactions")
+}
+
+// Sistema de Tokens
+model TokenPurchase {
+  id          String            @id @default(cuid())
+  tokens      Int               // Cantidad de tokens comprados
+  price       Float             // Precio total en euros
+  pricePerToken Float           // Precio por token
+  status      TransactionStatus @default(PENDING)
+  stripePaymentIntentId String?
+  createdAt   DateTime          @default(now())
+
+  // Relations
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+
+  @@map("token_purchases")
+}
+
+// Sistema de Bots
+model Bot {
+  id          String    @id @default(cuid())
+  name        String    @unique // Nombre del bot (ej: "Maria_Artista")
+  type        BotType
+  avatar      String?
+  location    String?
+  interests   String[]  // Categorías de interés
+  isActive    Boolean   @default(true)
+  maxBids     Int       @default(50) // Máximo de pujas por día
+  bidAmount   Int       @default(1)  // Cantidad de tokens por puja
+  frequency   Int       @default(300) // Frecuencia en segundos
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  activities  BotActivity[]
+
+  @@map("bots")
+}
+
+model BotActivity {
+  id          String   @id @default(cuid())
+  action      BotAction
+  tokens      Int
+  artworkId   String
+  createdAt   DateTime @default(now())
+
+  // Relations
+  bot         Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  botId       String
+  artwork     Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@map("bot_activities")
+}
+
+model BotConfig {
+  id                    String  @id @default(cuid())
+  key                   String  @unique
+  value                 String
+  description           String?
+  isActive              Boolean @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("bot_config")
+}
+
+// Solicitudes de Vendedores
+model SellerRequest {
+  id          String        @id @default(cuid())
+  title       String
+  artist      String
+  description String
+  images      String[]      // URLs de las imágenes
+  suggestedPrice Float
+  category    String
+  medium      String
+  dimensions  String?
+  year        Int?
+  provenance  String?
+  certificate String?
+  status      RequestStatus @default(PENDING)
+  adminNotes  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+
+  @@map("seller_requests")
 }
 
 model Ticket {
@@ -201,9 +310,15 @@ model TicketReply {
 // Enums
 enum UserRole {
   BUYER
-  SELLER
+  SELLER_REQUEST // Usuario que quiere vender
   ADMIN
   MODERATOR
+}
+
+enum KYCStatus {
+  PENDING
+  VERIFIED
+  REJECTED
 }
 
 enum ArtworkStatus {
@@ -211,6 +326,13 @@ enum ArtworkStatus {
   SOLD
   EXPIRED
   PENDING
+  RESERVED
+}
+
+enum SaleType {
+  AUCTION
+  DIRECT_SALE
+  BOTH
 }
 
 enum BidStatus {
@@ -220,12 +342,34 @@ enum BidStatus {
   CANCELLED
 }
 
+enum BotType {
+  ACTIVITY_BOT
+  COMPETITIVE_BOT
+  URGENCY_BOT
+  SPECIALIZED_BOT
+}
+
+enum BotAction {
+  BID
+  VIEW
+  FAVORITE
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  UNDER_REVIEW
+}
+
 enum NotificationType {
   BID_OUTBID
   AUCTION_ENDING
   NEW_ARTWORK
   PAYMENT_SUCCESS
   PAYMENT_FAILED
+  TOKEN_PURCHASE
+  AUCTION_WON
   SYSTEM
 }
 
@@ -235,6 +379,8 @@ enum TransactionType {
   BID
   PURCHASE
   REFUND
+  TOKEN_PURCHASE
+  TOKEN_REFUND
 }
 
 enum TransactionStatus {
@@ -265,6 +411,7 @@ enum TicketCategory {
   GENERAL
   BUG_REPORT
   FEATURE_REQUEST
+  SELLER_REQUEST
 }
 
 // CMS Models

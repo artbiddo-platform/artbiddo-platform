@@ -71,21 +71,21 @@ export default function AdminDashboard() {
       const user = localStorage.getItem('adminUser');
       
       if (!token || !user) {
-        router.push('/admin/login');
-        return;
-      }
-      
-      try {
+      router.push('/admin/login');
+      return;
+    }
+
+    try {
         const userData = JSON.parse(user);
         if (userData.role !== 'admin') {
           router.push('/admin/login');
           return;
         }
         setIsAuthenticated(true);
-      } catch (error) {
-        router.push('/admin/login');
+    } catch (error) {
+      router.push('/admin/login');
         return;
-      }
+    }
       
       setIsLoading(false);
     };
@@ -280,7 +280,7 @@ export default function AdminDashboard() {
                           <TrendingDown className="w-6 h-6 text-red-600" />
                         )}
                       </div>
-                    </div>
+                  </div>
                     <div className="mt-4">
                       <span className={`text-sm font-medium ${
                         dashboardData.overview.bidChange > 0 ? 'text-green-600' : 'text-red-600'
@@ -288,9 +288,9 @@ export default function AdminDashboard() {
                         {dashboardData.overview.bidChange > 0 ? '+' : ''}{dashboardData.overview.bidChange}%
                       </span>
                       <span className="text-sm text-gray-600"> vs mes anterior</span>
-                    </div>
                   </div>
                 </div>
+              </div>
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -319,7 +319,7 @@ export default function AdminDashboard() {
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-green-100 rounded-lg">
+                  <div className="p-2 bg-green-100 rounded-lg">
                         <Target className="w-6 h-6 text-green-600" />
                       </div>
                       <div>
@@ -344,10 +344,10 @@ export default function AdminDashboard() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                           <div className="bg-blue-600 h-2 rounded-full" style={{ width: '90%' }}></div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
+                  </div>
+                </div>
+              </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center space-x-3">
@@ -389,22 +389,22 @@ export default function AdminDashboard() {
                       <div>
                         <p className="text-sm font-medium text-gray-600">Comisiones</p>
                         <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.commission.toLocaleString()}</p>
-                      </div>
+                  </div>
                       <div className="p-2 rounded-full bg-blue-100">
                         <DollarSign className="w-6 h-6 text-blue-600" />
-                      </div>
-                    </div>
                   </div>
+                </div>
+              </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">Tarifas</p>
                         <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.fees.toLocaleString()}</p>
-                      </div>
+                  </div>
                       <div className="p-2 rounded-full bg-green-100">
                         <DollarSign className="w-6 h-6 text-green-600" />
-                      </div>
+                  </div>
                     </div>
                   </div>
 
@@ -416,23 +416,23 @@ export default function AdminDashboard() {
                       </div>
                       <div className="p-2 rounded-full bg-red-100">
                         <DollarSign className="w-6 h-6 text-red-600" />
-                      </div>
-                    </div>
-                  </div>
+                </div>
+              </div>
+            </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-gray-600">Pendiente</p>
                         <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.pending.toLocaleString()}</p>
                       </div>
                       <div className="p-2 rounded-full bg-yellow-100">
                         <Clock className="w-6 h-6 text-yellow-600" />
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </div>
+                        </div>
+                        </div>
+                      </div>
             )}
 
             {/* Security Tab */}
@@ -447,9 +447,9 @@ export default function AdminDashboard() {
                       </div>
                       <div className="p-2 rounded-full bg-yellow-100">
                         <Shield className="w-6 h-6 text-yellow-600" />
-                      </div>
-                    </div>
                   </div>
+                </div>
+              </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
@@ -460,8 +460,8 @@ export default function AdminDashboard() {
                       <div className="p-2 rounded-full bg-gray-100">
                         <Users className="w-6 h-6 text-gray-600" />
                       </div>
-                    </div>
-                  </div>
+                </div>
+                      </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
@@ -472,8 +472,8 @@ export default function AdminDashboard() {
                       <div className="p-2 rounded-full bg-green-100">
                         <CheckCircle className="w-6 h-6 text-green-600" />
                       </div>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
 
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div className="flex items-center justify-between">
@@ -483,10 +483,10 @@ export default function AdminDashboard() {
                       </div>
                       <div className="p-2 rounded-full bg-red-100">
                         <AlertTriangle className="w-6 h-6 text-red-600" />
-                      </div>
-                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Logs de Seguridad</h3>
@@ -522,29 +522,29 @@ export default function AdminDashboard() {
               <div className="space-y-6">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad en Tiempo Real</h3>
-                  <div className="space-y-4">
+                <div className="space-y-4">
                     {dashboardData.recentActivity.map((activity) => (
                       <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center space-x-3">
                           {getActivityIcon(activity.type)}
-                          <div>
+                        <div>
                             <p className="text-sm font-medium text-gray-900">{activity.user}</p>
                             <p className="text-sm text-gray-600">{activity.action}</p>
-                          </div>
                         </div>
-                        <div className="text-right">
+                      </div>
+                      <div className="text-right">
                           {activity.amount > 0 && (
                             <p className="text-sm font-medium text-green-600">
                               €{activity.amount.toLocaleString()}
-                            </p>
+                        </p>
                           )}
                           <p className="text-xs text-gray-500">{activity.time}</p>
-                        </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+            </div>
             )}
           </div>
         </div>

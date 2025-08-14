@@ -82,54 +82,89 @@ export default function Header() {
             >
               Sobre Nosotros
             </Link>
+            <Link 
+              href="/tokens" 
+              className={`font-light tracking-wide transition-colors ${
+                isScrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
+              }`}
+            >
+              💎 Tokens
+            </Link>
+            <Link 
+              href="/sell" 
+              className={`font-light tracking-wide transition-colors ${
+                isScrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
+              }`}
+            >
+              Vender
+            </Link>
           </nav>
 
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-6">
-            <button className={`p-2 transition-colors ${
-              isScrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-            }`}>
-              <Search className="h-5 w-5" />
-            </button>
-            
+          {/* User Menu / Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
-                <button className={`p-2 transition-colors ${
-                  isScrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-                }`}>
-                  <Heart className="h-5 w-5" />
-                </button>
-                <button className={`p-2 transition-colors ${
-                  isScrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-                }`}>
-                  <Bell className="h-5 w-5" />
-                </button>
+                {/* Token Display */}
+                <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-lg">
+                  <span className="text-blue-600 text-sm font-medium">💎</span>
+                  <span className="text-blue-600 text-sm font-medium">
+                    {user.tokens || 0} tokens
+                  </span>
+                </div>
+                
+                {/* User Menu */}
                 <div className="relative group">
-                  <button className={`flex items-center space-x-2 p-2 transition-colors ${
-                    isScrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white hover:text-gray-200'
-                  }`}>
-                    <User className="h-5 w-5" />
-                    <span className="font-light">{user.name}</span>
+                  <button className="flex items-center space-x-2 text-sm font-medium transition-colors">
+                    {user.avatar ? (
+                      <img 
+                        src={user.avatar} 
+                        alt={user.name} 
+                        className="w-8 h-8 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                        <span className="text-gray-600 text-sm font-medium">
+                          {user.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
+                    <span className={`${
+                      isScrolled ? 'text-gray-900' : 'text-white'
+                    }`}>
+                      {user.name}
+                    </span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <div className="py-2">
-                      <Link href="/perfil" className="block px-4 py-2 text-gray-900 hover:bg-gray-100">
-                        Mi Perfil
-                      </Link>
-                      <Link href="/mis-pujas" className="block px-4 py-2 text-gray-900 hover:bg-gray-100">
-                        Mis Pujas
-                      </Link>
-                      <Link href="/favoritos" className="block px-4 py-2 text-gray-900 hover:bg-gray-100">
-                        Favoritos
-                      </Link>
-                      <hr className="my-2" />
-                      <button 
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-gray-900 hover:bg-gray-100"
-                      >
-                        Cerrar Sesión
-                      </button>
-                    </div>
+                  
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <Link 
+                      href="/perfil" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Mi Perfil
+                    </Link>
+                    <Link 
+                      href="/tokens" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      💎 Comprar Tokens
+                    </Link>
+                    <Link 
+                      href="/subastas" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Mis Subastas
+                    </Link>
+                    <hr className="my-2" />
+                    <button 
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    >
+                      Cerrar Sesión
+                    </button>
                   </div>
                 </div>
               </div>
@@ -145,10 +180,8 @@ export default function Header() {
                 </Link>
                 <Link 
                   href="/register" 
-                  className={`px-4 sm:px-6 py-2 border-2 transition-all duration-300 uppercase tracking-wider text-xs sm:text-sm ${
-                    isScrolled 
-                      ? 'border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white' 
-                      : 'border-white text-white hover:bg-white hover:text-black'
+                  className={`bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors ${
+                    isScrolled ? 'text-black' : 'text-black'
                   }`}
                 >
                   Registrarse
@@ -200,6 +233,20 @@ export default function Header() {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sobre Nosotros
+                </Link>
+                <Link 
+                  href="/tokens" 
+                  className="block text-gray-900 hover:text-gray-600 font-light text-center py-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  💎 Tokens
+                </Link>
+                <Link 
+                  href="/sell" 
+                  className="block text-gray-900 hover:text-gray-600 font-light text-center py-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Vender
                 </Link>
               </div>
               

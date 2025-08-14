@@ -12,6 +12,7 @@ export default function AdminSidebar() {
     { id: 'dashboard', name: 'Dashboard', icon: '📊', path: '/admin/dashboard' },
     { id: 'content', name: 'Contenido', icon: '📝', path: '/admin/content' },
     { id: 'auctions', name: 'Subastas', icon: '🎨', path: '/admin/auctions' },
+    { id: 'bots', name: 'Sistema de Bots', icon: '🤖', path: '/admin/bots' },
     { id: 'users', name: 'Usuarios', icon: '👥', path: '/admin/users' },
     { id: 'reports', name: 'Reportes', icon: '📈', path: '/admin/reports' },
     { id: 'settings', name: 'Configuración', icon: '⚙️', path: '/admin/settings' }
@@ -75,7 +76,7 @@ export default function AdminSidebar() {
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.path)}
-                className={`
+                  className={`
                   w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors
                   ${getActiveTab() === item.id
                     ? 'bg-blue-100 text-blue-700 border border-blue-200'

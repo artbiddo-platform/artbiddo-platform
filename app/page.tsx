@@ -312,6 +312,186 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Tokens Section */}
+      <section className="py-12 sm:py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-light mb-3 sm:mb-4 tracking-wide">
+              Sistema de Tokens
+            </h2>
+            <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto px-4">
+              Puja con tokens virtuales y gana obras de arte reales. 
+              Un sistema único que combina diversión y valor real.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="bg-white bg-opacity-20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">💎</span>
+              </div>
+              <h3 className="text-xl font-medium mb-2">Compra Tokens</h3>
+              <p className="text-blue-100">Adquiere paquetes de tokens desde €25. Mientras más compres, mejor precio.</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-white bg-opacity-20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h3 className="text-xl font-medium mb-2">Puja y Gana</h3>
+              <p className="text-blue-100">Usa tus tokens para pujar en subastas. 1 token = 1 puja.</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-white bg-opacity-20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🏆</span>
+              </div>
+              <h3 className="text-xl font-medium mb-2">Obra Real</h3>
+              <p className="text-blue-100">Si ganas, la obra aparece en tu carrito al precio real para comprarla.</p>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <Link
+              href="/tokens"
+              className="bg-white text-blue-600 px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-medium hover:bg-gray-100 transition-all duration-300 uppercase tracking-wider inline-block"
+            >
+              Comprar Tokens
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-12 sm:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-light text-gray-900 mb-3 sm:mb-4 tracking-wide">
+              Cómo Funciona
+            </h2>
+            <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
+              Proceso simple y transparente para participar en nuestras subastas
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-gray-600">1</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Regístrate</h3>
+              <p className="text-gray-600 text-sm">Crea tu cuenta gratuita en menos de 2 minutos</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-gray-600">2</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Compra Tokens</h3>
+              <p className="text-gray-600 text-sm">Adquiere tokens para participar en las subastas</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-gray-600">3</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Puja</h3>
+              <p className="text-gray-600 text-sm">Participa en subastas en tiempo real</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-gray-600">4</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Gana</h3>
+              <p className="text-gray-600 text-sm">Si ganas, compra la obra al precio real</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-12 sm:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-light text-gray-900 mb-3 sm:mb-4 tracking-wide">
+              Lo Que Dicen Nuestros Coleccionistas
+            </h2>
+            <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
+              Experiencias reales de coleccionistas que han encontrado obras únicas
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-blue-600 font-semibold">MG</span>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900">María García</h4>
+                  <p className="text-sm text-gray-600">Coleccionista desde 2020</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">
+                "ArtBiddo ha revolucionado mi forma de coleccionar arte. El sistema de tokens es genial y he encontrado obras increíbles."
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-green-600 font-semibold">CL</span>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900">Carlos López</h4>
+                  <p className="text-sm text-gray-600">Inversor de Arte</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">
+                "La calidad de las obras y la transparencia del proceso me han convertido en un usuario fiel. Excelente plataforma."
+              </p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-purple-600 font-semibold">AM</span>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900">Ana Martínez</h4>
+                  <p className="text-sm text-gray-600">Galerista</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">
+                "Como galerista, aprecio la profesionalidad de ArtBiddo. El sistema de verificación de obras es impecable."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-12 sm:py-20 bg-black text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-3xl sm:text-4xl font-light mb-4 sm:mb-6 tracking-wide">
+            ¿Listo para Empezar?
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto px-4">
+            Únete a miles de coleccionistas que ya han descubierto obras únicas en ArtBiddo
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+            <Link
+              href="/register"
+              className="bg-white text-black px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-medium hover:bg-gray-100 transition-all duration-300 uppercase tracking-wider w-full sm:w-auto text-center"
+            >
+              Crear Cuenta Gratis
+            </Link>
+            <Link
+              href="/tokens"
+              className="border-2 border-white text-white px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-medium hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-wider w-full sm:w-auto text-center"
+            >
+              Comprar Tokens
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );
