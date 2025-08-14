@@ -69,7 +69,7 @@ export default function Header() {
             <span className={`text-2xl font-bold transition-colors ${
               isScrolled ? 'text-gray-900' : 'text-white'
             }`}>
-              ARTBIDDO
+            ARTBIDDO
             </span>
           </Link>
 
@@ -153,8 +153,8 @@ export default function Header() {
                       href="/perfil" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Mi Perfil
-                    </Link>
+                        Mi Perfil
+                      </Link>
                     <Link 
                       href="/tokens" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -166,7 +166,7 @@ export default function Header() {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Mis Subastas
-                    </Link>
+                      </Link>
                     {user.role === 'ADMIN' && (
                       <Link 
                         href="/admin/dashboard" 
@@ -175,13 +175,13 @@ export default function Header() {
                         Panel Admin
                       </Link>
                     )}
-                    <hr className="my-2" />
-                    <button 
-                      onClick={handleLogout}
+                      <hr className="my-2" />
+                      <button 
+                        onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                    >
-                      Cerrar Sesión
-                    </button>
+                      >
+                        Cerrar Sesión
+                      </button>
                   </div>
                 </div>
               </div>
@@ -215,38 +215,38 @@ export default function Header() {
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
-      </div>
+        </div>
 
       {/* Mobile menu */}
-      {isMenuOpen && (
+        {isMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link 
-              href="/subastas" 
+                <Link 
+                  href="/subastas" 
               className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-            >
-              Subastas
-            </Link>
-            <Link 
-              href="/categorias" 
+                >
+                  Subastas
+                </Link>
+                <Link 
+                  href="/categorias" 
               className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-            >
-              Categorías
-            </Link>
-            <Link 
-              href="/artistas" 
+                >
+                  Categorías
+                </Link>
+                <Link 
+                  href="/artistas" 
               className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-            >
-              Artistas
-            </Link>
-            <Link 
+                >
+                  Artistas
+                </Link>
+                <Link 
               href="/about" 
               className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-            >
-              Sobre Nosotros
-            </Link>
-            
-            {user ? (
+                >
+                  Sobre Nosotros
+                </Link>
+              
+              {user ? (
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="flex items-center px-3">
                   <div className="flex-shrink-0">
@@ -270,21 +270,21 @@ export default function Header() {
                       💎 {user.tokens || 0} tokens
                     </div>
                   </div>
-                </div>
+                  </div>
                 <div className="mt-3 space-y-1">
-                  <Link 
-                    href="/perfil" 
+                    <Link 
+                      href="/perfil" 
                     className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-                  >
-                    Mi Perfil
-                  </Link>
-                  <Link 
+                    >
+                      Mi Perfil
+                    </Link>
+                    <Link 
                     href="/tokens" 
                     className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-                  >
+                    >
                     💎 Comprar Tokens
-                  </Link>
-                  <Link 
+                    </Link>
+                    <Link 
                     href="/subastas" 
                     className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
                   >
@@ -298,15 +298,15 @@ export default function Header() {
                       Panel Admin
                     </Link>
                   )}
-                  <button 
+                    <button 
                     onClick={handleLogout}
                     className="block w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-900 hover:bg-gray-50 rounded-md"
-                  >
-                    Cerrar Sesión
-                  </button>
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ) : (
+              ) : (
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="space-y-1">
                   <Link 
@@ -322,9 +322,9 @@ export default function Header() {
                     Registrarse
                   </Link>
                 </div>
-              </div>
-            )}
           </div>
+        )}
+      </div>
         </div>
       )}
     </header>
