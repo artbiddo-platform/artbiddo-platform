@@ -1,44 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-// Usuarios mock para testing
-const mockUsers = [
-  {
-    id: '1',
-    name: 'Admin ArtBiddo',
-    email: 'admin@artbiddo.com',
-    password: 'admin123456', // En producción esto estaría hasheado
-    role: 'ADMIN',
-    phone: '+34 91 123 4567',
-    address: 'Madrid, España',
-    balance: 10000
-  },
-  {
-    id: '2',
-    name: 'Carlos Rodríguez',
-    email: 'carlos.rodriguez@email.com',
-    password: 'password123',
-    role: 'SELLER',
-    phone: '+34 91 234 5678',
-    address: 'Barcelona, España',
-    balance: 5000
-  },
-  {
-    id: '3',
-    name: 'Ana López',
-    email: 'ana.lopez@email.com',
-    password: 'password123',
-    role: 'BUYER',
-    phone: '+34 91 345 6789',
-    address: 'Valencia, España',
-    balance: 3000
-  }
-];
+// Credenciales de administrador (en producción deberían estar en variables de entorno)
+const ADMIN_EMAIL = 'admin@artbiddo.com';
+const ADMIN_PASSWORD = 'ArtBiddo2024!';
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    // Validaciones básicas
     if (!email || !password) {
       return NextResponse.json(
         { error: 'Email y contraseña son requeridos' },
@@ -46,34 +18,100 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Buscar usuario en mock data
-    const user = mockUsers.find(u => u.email === email);
+    // Verificar si es el administrador
+    if (email === ADMIN_EMAIL) {
+      if (password === ADMIN_PASSWORD) {
+        // Crear token JWT para admin
+        const token = jwt.sign(
+          { 
+            userId: 'admin-1', 
+            email: ADMIN_EMAIL, 
+            role: 'ADMIN' 
+          },
+          process.env.NEXTAUTH_SECRET || 'fallback-secret',
+          { expiresIn: '24h' }
+        );
+
+        const adminUser = {
+          id: 'admin-1',
+          email: ADMIN_EMAIL,
+          name: 'Administrador ArtBiddo',
+          role: 'ADMIN',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+          tokens: 999999, // Tokens ilimitados para admin
+          balance: 999999
+        };
+
+        return NextResponse.json({
+          success: true,
+          token,
+          user: adminUser,
+          message: 'Login exitoso como administrador'
+        });
+      } else {
+        return NextResponse.json(
+          { error: 'Credenciales de administrador incorrectas' },
+          { status: 401 }
+        );
+      }
+    }
+
+    // Buscar usuario normal en la base de datos
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    });
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Credenciales inválidas' },
+        { error: 'Usuario no encontrado' },
         { status: 401 }
       );
     }
 
-    // Verificar contraseña (en producción esto sería hasheado)
-    if (user.password !== password) {
+    // Verificar contraseña
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    
+    if (!isValidPassword) {
       return NextResponse.json(
-        { error: 'Credenciales inválidas' },
+        { error: 'Contraseña incorrecta' },
         { status: 401 }
       );
     }
 
-    // Generar token mock
-    const token = `mock_token_${user.id}_${Date.now()}`;
+    // Crear token JWT
+    const token = jwt.sign(
+      { 
+        userId: user.id, 
+        email: user.email, 
+        role: user.role 
+      },
+      process.env.NEXTAUTH_SECRET || 'fallback-secret',
+      { expiresIn: '24h' }
+    );
 
-    // Retornar respuesta sin la contraseña
-    const { password: _, ...userWithoutPassword } = user;
+    // Actualizar último login
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLogin: new Date() }
+    });
+
+    // Preparar datos del usuario para el frontend
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      avatar: user.avatar,
+      tokens: user.tokens,
+      balance: user.balance,
+      verified: user.verified
+    };
 
     return NextResponse.json({
-      message: 'Login exitoso',
-      user: userWithoutPassword,
-      token
+      success: true,
+      token,
+      user: userData,
+      message: 'Login exitoso'
     });
 
   } catch (error) {

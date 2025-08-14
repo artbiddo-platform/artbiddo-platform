@@ -4,23 +4,24 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/AdminSidebar';
 import { 
-  BarChart3, 
-  DollarSign, 
-  Shield, 
-  Activity, 
-  TrendingUp, 
-  TrendingDown, 
   Users, 
-  ShoppingCart, 
   Eye, 
-  CheckCircle, 
+  ShoppingCart, 
+  DollarSign, 
+  TrendingUp, 
+  TrendingDown,
+  Activity,
+  Calendar,
+  Target,
+  Zap,
+  BarChart3,
+  Shield,
   AlertTriangle, 
   Bell, 
   Settings,
   Clock,
-  Calendar,
-  Target,
-  Zap
+  Target as TargetIcon,
+  Zap as ZapIcon
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -28,6 +29,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   // Mock data for dashboard
   const dashboardData = {
@@ -67,25 +69,26 @@ export default function AdminDashboard() {
   // Authentication check
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem('adminToken');
-      const user = localStorage.getItem('adminUser');
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('user');
       
-      if (!token || !user) {
-      router.push('/admin/login');
-      return;
-    }
+      if (!token || !userData) {
+        router.push('/login');
+        return;
+      }
 
-    try {
-        const userData = JSON.parse(user);
-        if (userData.role !== 'admin') {
-          router.push('/admin/login');
+      try {
+        const userInfo = JSON.parse(userData);
+        if (userInfo.role !== 'ADMIN') {
+          router.push('/login');
           return;
         }
+        setUser(userInfo);
         setIsAuthenticated(true);
-    } catch (error) {
-      router.push('/admin/login');
+      } catch (error) {
+        router.push('/login');
         return;
-    }
+      }
       
       setIsLoading(false);
     };
@@ -120,434 +123,236 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        {/* Sidebar */}
-        <AdminSidebar />
+      <AdminSidebar />
+      
+      <div className="ml-64 p-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Panel de Administración
+          </h1>
+          <p className="text-gray-600">
+            Bienvenido, {user?.name || 'Administrador'}
+          </p>
+        </div>
 
-        {/* Main Content */}
-        <div className="flex-1 lg:ml-0">
-          {/* Header */}
-          <div className="bg-white shadow-sm border-b border-gray-200">
-            <div className="px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Dashboard de Administración</h1>
-                  <p className="text-gray-600">Vista general del sistema de subastas</p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Shield className="w-4 h-4 text-green-500" />
-                    <span>Seguridad: {dashboardData.security.securityScore}%</span>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                    <Settings className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Dashboard Tabs */}
-          <div className="bg-white border-b border-gray-200">
-            <div className="px-6">
-              <nav className="flex space-x-8">
-                {[
-                  { id: 'overview', name: 'Vista General', icon: BarChart3 },
-                  { id: 'financial', name: 'Financiero', icon: DollarSign },
-                  { id: 'security', name: 'Seguridad', icon: Shield },
-                  { id: 'activity', name: 'Actividad', icon: Activity }
-                ].map((tab) => (
+        {/* Tabs */}
+        <div className="mb-8">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              {[
+                { id: 'overview', name: 'Resumen', icon: BarChart3 },
+                { id: 'financial', name: 'Financiero', icon: DollarSign },
+                { id: 'security', name: 'Seguridad', icon: Shield },
+                { id: 'activity', name: 'Actividad', icon: Activity }
+              ].map((tab) => {
+                const Icon = tab.icon;
+                return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
+                    className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                       activeTab === tab.id
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    <tab.icon className="w-4 h-4" />
+                    <Icon className="w-4 h-4" />
                     <span>{tab.name}</span>
                   </button>
-                ))}
-              </nav>
-            </div>
+                );
+              })}
+            </nav>
           </div>
+        </div>
 
-          {/* Content */}
-          <div className="p-6">
-            {/* Overview Tab */}
-            {activeTab === 'overview' && (
-              <div className="space-y-6">
-                {/* Key Metrics */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          €{dashboardData.overview.totalRevenue.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className={`p-2 rounded-full ${
-                        dashboardData.overview.revenueChange > 0 ? 'bg-green-100' : 'bg-red-100'
-                      }`}>
-                        {dashboardData.overview.revenueChange > 0 ? (
-                          <TrendingUp className="w-6 h-6 text-green-600" />
-                        ) : (
-                          <TrendingDown className="w-6 h-6 text-red-600" />
-                        )}
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <span className={`text-sm font-medium ${
-                        dashboardData.overview.revenueChange > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {dashboardData.overview.revenueChange > 0 ? '+' : ''}{dashboardData.overview.revenueChange}%
-                      </span>
-                      <span className="text-sm text-gray-600"> vs mes anterior</span>
-                    </div>
+        {/* Content */}
+        {activeTab === 'overview' && (
+          <div className="space-y-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <DollarSign className="h-6 w-6 text-blue-600" />
                   </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Usuarios Activos</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {dashboardData.overview.totalUsers.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className={`p-2 rounded-full ${
-                        dashboardData.overview.userChange > 0 ? 'bg-green-100' : 'bg-red-100'
-                      }`}>
-                        {dashboardData.overview.userChange > 0 ? (
-                          <TrendingUp className="w-6 h-6 text-green-600" />
-                        ) : (
-                          <TrendingDown className="w-6 h-6 text-red-600" />
-                        )}
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <span className={`text-sm font-medium ${
-                        dashboardData.overview.userChange > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {dashboardData.overview.userChange > 0 ? '+' : ''}{dashboardData.overview.userChange}%
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      €{dashboardData.overview.totalRevenue.toLocaleString()}
+                    </p>
+                    <div className="flex items-center mt-1">
+                      <TrendingUp className="h-4 w-4 text-green-500" />
+                      <span className="text-sm text-green-600 ml-1">
+                        +{dashboardData.overview.revenueChange}%
                       </span>
-                      <span className="text-sm text-gray-600"> vs mes anterior</span>
                     </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Subastas Activas</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.overview.activeAuctions}</p>
-                      </div>
-                      <div className={`p-2 rounded-full ${
-                        dashboardData.overview.auctionChange > 0 ? 'bg-green-100' : 'bg-red-100'
-                      }`}>
-                        {dashboardData.overview.auctionChange > 0 ? (
-                          <TrendingUp className="w-6 h-6 text-green-600" />
-                        ) : (
-                          <TrendingDown className="w-6 h-6 text-red-600" />
-                        )}
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <span className={`text-sm font-medium ${
-                        dashboardData.overview.auctionChange > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {dashboardData.overview.auctionChange > 0 ? '+' : ''}{dashboardData.overview.auctionChange}%
-                      </span>
-                      <span className="text-sm text-gray-600"> vs mes anterior</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Total de Pujas</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {dashboardData.overview.totalBids.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className={`p-2 rounded-full ${
-                        dashboardData.overview.bidChange > 0 ? 'bg-green-100' : 'bg-red-100'
-                      }`}>
-                        {dashboardData.overview.bidChange > 0 ? (
-                          <TrendingUp className="w-6 h-6 text-green-600" />
-                        ) : (
-                          <TrendingDown className="w-6 h-6 text-red-600" />
-                        )}
-                      </div>
-                  </div>
-                    <div className="mt-4">
-                      <span className={`text-sm font-medium ${
-                        dashboardData.overview.bidChange > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {dashboardData.overview.bidChange > 0 ? '+' : ''}{dashboardData.overview.bidChange}%
-                      </span>
-                      <span className="text-sm text-gray-600"> vs mes anterior</span>
                   </div>
                 </div>
               </div>
 
-                {/* Quick Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <Zap className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Acciones Rápidas</h3>
-                        <p className="text-gray-600">Gestiona tu plataforma</p>
-                      </div>
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">
-                        Crear Nueva Subasta
-                      </button>
-                      <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">
-                        Ver Reportes
-                      </button>
-                      <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">
-                        Configurar Sistema
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center space-x-3">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex items-center">
                   <div className="p-2 bg-green-100 rounded-lg">
-                        <Target className="w-6 h-6 text-green-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Objetivos</h3>
-                        <p className="text-gray-600">Metas del mes</p>
-                      </div>
-                    </div>
-                    <div className="mt-4 space-y-3">
-                      <div>
-                        <div className="flex justify-between text-sm">
-                          <span>Ingresos</span>
-                          <span>75%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                          <div className="bg-green-600 h-2 rounded-full" style={{ width: '75%' }}></div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-sm">
-                          <span>Usuarios</span>
-                          <span>90%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '90%' }}></div>
+                    <Users className="h-6 w-6 text-green-600" />
                   </div>
-                  </div>
-                </div>
-              </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-purple-100 rounded-lg">
-                        <Clock className="w-6 h-6 text-purple-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Próximos Eventos</h3>
-                        <p className="text-gray-600">Subastas programadas</p>
-                      </div>
-                    </div>
-                    <div className="mt-4 space-y-3">
-                      <div className="flex items-center space-x-3">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">Subasta Contemporánea</p>
-                          <p className="text-xs text-gray-500">En 2 días</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">Subasta Clásica</p>
-                          <p className="text-xs text-gray-500">En 5 días</p>
-                        </div>
-                      </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Usuarios Totales</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {dashboardData.overview.totalUsers.toLocaleString()}
+                    </p>
+                    <div className="flex items-center mt-1">
+                      <TrendingUp className="h-4 w-4 text-green-500" />
+                      <span className="text-sm text-green-600 ml-1">
+                        +{dashboardData.overview.userChange}%
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* Financial Tab */}
-            {activeTab === 'financial' && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Comisiones</p>
-                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.commission.toLocaleString()}</p>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-purple-100 rounded-lg">
+                    <Eye className="h-6 w-6 text-purple-600" />
                   </div>
-                      <div className="p-2 rounded-full bg-blue-100">
-                        <DollarSign className="w-6 h-6 text-blue-600" />
-                  </div>
-                </div>
-              </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Tarifas</p>
-                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.fees.toLocaleString()}</p>
-                  </div>
-                      <div className="p-2 rounded-full bg-green-100">
-                        <DollarSign className="w-6 h-6 text-green-600" />
-                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Subastas Activas</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {dashboardData.overview.activeAuctions}
+                    </p>
+                    <div className="flex items-center mt-1">
+                      <TrendingDown className="h-4 w-4 text-red-500" />
+                      <span className="text-sm text-red-600 ml-1">
+                        {dashboardData.overview.auctionChange}%
+                      </span>
                     </div>
                   </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Reembolsos</p>
-                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.refunds.toLocaleString()}</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-red-100">
-                        <DollarSign className="w-6 h-6 text-red-600" />
-                </div>
-              </div>
-            </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Pendiente</p>
-                        <p className="text-2xl font-bold text-gray-900">€{dashboardData.financial.pending.toLocaleString()}</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-yellow-100">
-                        <Clock className="w-6 h-6 text-yellow-600" />
-                  </div>
-                </div>
-                        </div>
-                        </div>
-                      </div>
-            )}
-
-            {/* Security Tab */}
-            {activeTab === 'security' && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Actividad Sospechosa</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.security.suspiciousActivity}</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-yellow-100">
-                        <Shield className="w-6 h-6 text-yellow-600" />
-                  </div>
                 </div>
               </div>
 
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Usuarios Bloqueados</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.security.blockedUsers}</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-gray-100">
-                        <Users className="w-6 h-6 text-gray-600" />
-                      </div>
-                </div>
-                      </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Puntuación Seguridad</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.security.securityScore}%</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-green-100">
-                        <CheckCircle className="w-6 h-6 text-green-600" />
-                      </div>
-                      </div>
-                      </div>
-
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Logins Fallidos</p>
-                        <p className="text-2xl font-bold text-gray-900">{dashboardData.security.failedLogins}</p>
-                      </div>
-                      <div className="p-2 rounded-full bg-red-100">
-                        <AlertTriangle className="w-6 h-6 text-red-600" />
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-orange-100 rounded-lg">
+                    <ShoppingCart className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">Total de Pujas</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {dashboardData.overview.totalBids.toLocaleString()}
+                    </p>
+                    <div className="flex items-center mt-1">
+                      <TrendingUp className="h-4 w-4 text-green-500" />
+                      <span className="text-sm text-green-600 ml-1">
+                        +{dashboardData.overview.bidChange}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Logs de Seguridad</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <AlertTriangle className="w-4 h-4 text-red-500" />
-                        <span className="text-sm text-gray-900">Intento de acceso no autorizado desde IP 192.168.1.100</span>
-                      </div>
-                      <span className="text-xs text-gray-500">Hace 5 minutos</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Shield className="w-4 h-4 text-yellow-500" />
-                        <span className="text-sm text-gray-900">Múltiples pujas sospechosas detectadas</span>
-                      </div>
-                      <span className="text-xs text-gray-500">Hace 15 minutos</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span className="text-sm text-gray-900">Backup de seguridad completado exitosamente</span>
-                      </div>
-                      <span className="text-xs text-gray-500">Hace 1 hora</span>
-                    </div>
-                  </div>
-                </div>
+            {/* Recent Activity */}
+            <div className="bg-white rounded-lg shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Actividad Reciente</h3>
               </div>
-            )}
-
-            {/* Activity Tab */}
-            {activeTab === 'activity' && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad en Tiempo Real</h3>
+              <div className="p-6">
                 <div className="space-y-4">
-                    {dashboardData.recentActivity.map((activity) => (
-                      <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          {getActivityIcon(activity.type)}
-                        <div>
-                            <p className="text-sm font-medium text-gray-900">{activity.user}</p>
-                            <p className="text-sm text-gray-600">{activity.action}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                          {activity.amount > 0 && (
-                            <p className="text-sm font-medium text-green-600">
-                              €{activity.amount.toLocaleString()}
+                  {dashboardData.recentActivity.map((activity) => (
+                    <div key={activity.id} className="flex items-center space-x-4">
+                      {getActivityIcon(activity.type)}
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {activity.user} - {activity.action}
                         </p>
-                          )}
-                          <p className="text-xs text-gray-500">{activity.time}</p>
+                        <p className="text-sm text-gray-500">{activity.time}</p>
                       </div>
+                      {activity.amount > 0 && (
+                        <span className="text-sm font-medium text-green-600">
+                          €{activity.amount.toLocaleString()}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-            )}
           </div>
-        </div>
+        )}
+
+        {activeTab === 'financial' && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Comisiones</h3>
+                <p className="text-3xl font-bold text-green-600">
+                  €{dashboardData.financial.commission.toLocaleString()}
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Tarifas</h3>
+                <p className="text-3xl font-bold text-blue-600">
+                  €{dashboardData.financial.fees.toLocaleString()}
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Reembolsos</h3>
+                <p className="text-3xl font-bold text-red-600">
+                  €{dashboardData.financial.refunds.toLocaleString()}
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Pendiente</h3>
+                <p className="text-3xl font-bold text-yellow-600">
+                  €{dashboardData.financial.pending.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'security' && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Puntuación de Seguridad</h3>
+                <p className="text-3xl font-bold text-green-600">
+                  {dashboardData.security.securityScore}/100
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Actividad Sospechosa</h3>
+                <p className="text-3xl font-bold text-orange-600">
+                  {dashboardData.security.suspiciousActivity}
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Usuarios Bloqueados</h3>
+                <p className="text-3xl font-bold text-red-600">
+                  {dashboardData.security.blockedUsers}
+                </p>
+              </div>
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Logins Fallidos</h3>
+                <p className="text-3xl font-bold text-yellow-600">
+                  {dashboardData.security.failedLogins}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'activity' && (
+          <div className="space-y-8">
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Actividad del Sistema</h3>
+              <p className="text-gray-600">
+                Último backup: {dashboardData.security.lastBackup}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

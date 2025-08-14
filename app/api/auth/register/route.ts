@@ -1,47 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Usuarios mock para testing (en producción esto estaría en la base de datos)
-let mockUsers = [
-  {
-    id: '1',
-    name: 'Admin ArtBiddo',
-    email: 'admin@artbiddo.com',
-    password: 'admin123456',
-    role: 'ADMIN',
-    phone: '+34 91 123 4567',
-    address: 'Madrid, España',
-    balance: 10000
-  },
-  {
-    id: '2',
-    name: 'Carlos Rodríguez',
-    email: 'carlos.rodriguez@email.com',
-    password: 'password123',
-    role: 'SELLER',
-    phone: '+34 91 234 5678',
-    address: 'Barcelona, España',
-    balance: 5000
-  },
-  {
-    id: '3',
-    name: 'Ana López',
-    email: 'ana.lopez@email.com',
-    password: 'password123',
-    role: 'BUYER',
-    phone: '+34 91 345 6789',
-    address: 'Valencia, España',
-    balance: 3000
-  }
-];
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password, role, phone, address } = await request.json();
+    const { name, email, password, phone, address } = await request.json();
 
-    // Validaciones básicas
-    if (!name || !email || !password || !role) {
+    // Validaciones
+    if (!name || !email || !password) {
       return NextResponse.json(
-        { error: 'Todos los campos obligatorios deben estar completos' },
+        { error: 'Nombre, email y contraseña son requeridos' },
         { status: 400 }
       );
     }
@@ -53,41 +22,64 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar si el usuario ya existe
-    const existingUser = mockUsers.find(u => u.email === email);
+    // Verificar si el email ya existe
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Ya existe una cuenta con este email' },
-        { status: 400 }
+        { error: 'El email ya está registrado' },
+        { status: 409 }
       );
     }
 
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     // Crear el usuario
-    const newUser = {
-      id: (mockUsers.length + 1).toString(),
-      name,
-      email,
-      password, // En producción esto estaría hasheado
-      role: role.toUpperCase(),
-      phone: phone || '',
-      address: address || '',
-      balance: 0
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        phone: phone || null,
+        address: address || null,
+        role: 'BUYER', // Por defecto es comprador
+        tokens: 0,
+        balance: 0,
+        verified: false
+      }
+    });
+
+    // Crear token JWT
+    const token = jwt.sign(
+      { 
+        userId: user.id, 
+        email: user.email, 
+        role: user.role 
+      },
+      process.env.NEXTAUTH_SECRET || 'fallback-secret',
+      { expiresIn: '24h' }
+    );
+
+    // Preparar datos del usuario para el frontend
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      avatar: user.avatar,
+      tokens: user.tokens,
+      balance: user.balance,
+      verified: user.verified
     };
 
-    // Agregar a la lista mock (en producción esto iría a la base de datos)
-    mockUsers.push(newUser);
-
-    // Generar token mock
-    const token = `mock_token_${newUser.id}_${Date.now()}`;
-
-    // Retornar respuesta sin la contraseña
-    const { password: _, ...userWithoutPassword } = newUser;
-
     return NextResponse.json({
-      message: 'Usuario registrado exitosamente',
-      user: userWithoutPassword,
-      token
+      success: true,
+      token,
+      user: userData,
+      message: 'Usuario registrado exitosamente'
     });
 
   } catch (error) {

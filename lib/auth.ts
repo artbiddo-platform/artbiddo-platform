@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from './prisma';
+import { NextRequest } from 'next/server';
 
 export interface LoginCredentials {
   email: string;
@@ -16,6 +17,12 @@ export interface RegisterData {
   address?: string;
 }
 
+export interface JWTPayload {
+  userId: string;
+  email: string;
+  role: string;
+}
+
 export const hashPassword = async (password: string): Promise<string> => {
   return await bcrypt.hash(password, 12);
 };
@@ -28,13 +35,46 @@ export const generateToken = (userId: string): string => {
   return jwt.sign({ userId }, process.env.JWT_SECRET!, { expiresIn: '7d' });
 };
 
-export const verifyToken = (token: string): { userId: string } | null => {
+// Verificar token JWT
+export function verifyToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
-  } catch {
+    const decoded = jwt.verify(
+      token, 
+      process.env.NEXTAUTH_SECRET || 'fallback-secret'
+    ) as JWTPayload;
+    return decoded;
+  } catch (error) {
+    console.error('Error verificando token:', error);
     return null;
   }
-};
+}
+
+// Extraer token del header Authorization
+export function extractTokenFromHeader(request: NextRequest): string | null {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  return authHeader.substring(7);
+}
+
+// Verificar si el usuario es administrador
+export function isAdmin(payload: JWTPayload): boolean {
+  return payload.role === 'ADMIN';
+}
+
+// Middleware para proteger rutas de admin
+export function requireAdmin(payload: JWTPayload): boolean {
+  if (!payload || !isAdmin(payload)) {
+    return false;
+  }
+  return true;
+}
+
+// Middleware para proteger rutas de usuario
+export function requireAuth(payload: JWTPayload): boolean {
+  return !!payload;
+}
 
 export const authenticateUser = async (credentials: LoginCredentials) => {
   const user = await prisma.user.findUnique({
