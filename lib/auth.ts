@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from './prisma';
 import { NextRequest } from 'next/server';
+import { UserRole } from '@prisma/client';
 
 export interface LoginCredentials {
   email: string;
@@ -12,7 +13,7 @@ export interface RegisterData {
   name: string;
   email: string;
   password: string;
-  role: 'BUYER' | 'SELLER';
+  role: UserRole;
   phone?: string;
   address?: string;
 }
