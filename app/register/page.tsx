@@ -12,7 +12,6 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'BUYER',
     phone: '',
     address: ''
   });
@@ -50,7 +49,6 @@ export default function RegisterPage() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          role: formData.role,
           phone: formData.phone,
           address: formData.address
         })
@@ -188,21 +186,7 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Role Field */}
-              <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
-                  Tipo de Cuenta
-                </label>
-                <select
-                  id="role"
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                >
-                  <option value="BUYER">Comprador</option>
-                  <option value="SELLER">Vendedor</option>
-                </select>
-              </div>
+
 
               {/* Phone Field */}
               <div>
