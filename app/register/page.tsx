@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Eye, EyeOff, Lock, Mail, User, Phone, MapPin } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -81,17 +80,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       <Header />
       
       <main className="flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-white mb-2">
               Crear Cuenta
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-300">
               Únete a nuestra comunidad de arte y subastas
             </p>
           </div>
@@ -252,7 +251,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {loading ? (
                   <div className="flex items-center space-x-2">
@@ -281,7 +280,6 @@ export default function RegisterPage() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }
