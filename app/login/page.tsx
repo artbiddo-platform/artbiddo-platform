@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
 export default function LoginPage() {
@@ -154,8 +153,6 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
