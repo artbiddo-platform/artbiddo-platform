@@ -115,7 +115,7 @@ export default function BotsPage() {
       type: 'URGENCY_BOT',
       avatar: '/avatars/lastchance.jpg',
       location: 'España',
-      interests: ['Todos'],
+      interests: JSON.stringify(['Todos']),
       isActive: false,
       maxBids: 20,
       bidAmount: 2,

@@ -74,10 +74,10 @@ export default function AdminDashboard() {
       
       if (!token || !userData) {
         router.push('/login');
-        return;
-      }
+      return;
+    }
 
-      try {
+    try {
         const userInfo = JSON.parse(userData);
         if (userInfo.role !== 'ADMIN') {
           router.push('/login');
@@ -85,10 +85,10 @@ export default function AdminDashboard() {
         }
         setUser(userInfo);
         setIsAuthenticated(true);
-      } catch (error) {
+    } catch (error) {
         router.push('/login');
         return;
-      }
+    }
       
       setIsLoading(false);
     };
@@ -124,9 +124,9 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
-      
+
       <div className="ml-64 p-8">
-        {/* Header */}
+          {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Panel de Administración
@@ -163,10 +163,10 @@ export default function AdminDashboard() {
                 );
               })}
             </nav>
+            </div>
           </div>
-        </div>
 
-        {/* Content */}
+          {/* Content */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
             {/* Stats Cards */}
@@ -254,31 +254,31 @@ export default function AdminDashboard() {
 
             {/* Recent Activity */}
             <div className="bg-white rounded-lg shadow-sm">
-              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="px-6 py-4 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">Actividad Reciente</h3>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
                   {dashboardData.recentActivity.map((activity) => (
                     <div key={activity.id} className="flex items-center space-x-4">
                       {getActivityIcon(activity.type)}
-                      <div className="flex-1">
+                        <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900">
                           {activity.user} - {activity.action}
                         </p>
                         <p className="text-sm text-gray-500">{activity.time}</p>
-                      </div>
+                        </div>
                       {activity.amount > 0 && (
                         <span className="text-sm font-medium text-green-600">
                           €{activity.amount.toLocaleString()}
                         </span>
                       )}
-                    </div>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+                </div>
         )}
 
         {activeTab === 'financial' && (
@@ -289,27 +289,27 @@ export default function AdminDashboard() {
                 <p className="text-3xl font-bold text-green-600">
                   €{dashboardData.financial.commission.toLocaleString()}
                 </p>
-              </div>
+                      </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Tarifas</h3>
                 <p className="text-3xl font-bold text-blue-600">
                   €{dashboardData.financial.fees.toLocaleString()}
                 </p>
-              </div>
+                      </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Reembolsos</h3>
                 <p className="text-3xl font-bold text-red-600">
                   €{dashboardData.financial.refunds.toLocaleString()}
                 </p>
-              </div>
+                      </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Pendiente</h3>
                 <p className="text-3xl font-bold text-yellow-600">
                   €{dashboardData.financial.pending.toLocaleString()}
                 </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
         )}
 
         {activeTab === 'security' && (
@@ -326,21 +326,21 @@ export default function AdminDashboard() {
                 <p className="text-3xl font-bold text-orange-600">
                   {dashboardData.security.suspiciousActivity}
                 </p>
-              </div>
+                        </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Usuarios Bloqueados</h3>
                 <p className="text-3xl font-bold text-red-600">
                   {dashboardData.security.blockedUsers}
-                </p>
-              </div>
+                          </p>
+                        </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Logins Fallidos</h3>
                 <p className="text-3xl font-bold text-yellow-600">
                   {dashboardData.security.failedLogins}
-                </p>
-              </div>
-            </div>
-          </div>
+                        </p>
+                      </div>
+                    </div>
+                </div>
         )}
 
         {activeTab === 'activity' && (
@@ -350,8 +350,8 @@ export default function AdminDashboard() {
               <p className="text-gray-600">
                 Último backup: {dashboardData.security.lastBackup}
               </p>
+              </div>
             </div>
-          </div>
         )}
       </div>
     </div>
