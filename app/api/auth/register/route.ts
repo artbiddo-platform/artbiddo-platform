@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { EmailService } from '@/lib/emailService';
 
 export async function POST(request: NextRequest) {
   try {
@@ -62,6 +63,17 @@ export async function POST(request: NextRequest) {
       process.env.NEXTAUTH_SECRET || 'fallback-secret',
       { expiresIn: '24h' }
     );
+
+    // Enviar email de bienvenida (en segundo plano)
+    try {
+      await EmailService.sendWelcomeEmail({
+        to: user.email,
+        name: user.name
+      });
+    } catch (error) {
+      console.error('Error enviando email de bienvenida:', error);
+      // No fallamos el registro si el email falla
+    }
 
     // Preparar datos del usuario para el frontend
     const userData = {
