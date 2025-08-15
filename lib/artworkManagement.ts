@@ -11,7 +11,7 @@ export interface ArtworkData {
   medium: string;
   dimensions: string;
   image: string;
-  images?: string[];
+  images?: string; // JSON string
   startingPrice: number;
   estimatedValue: number;
   reservePrice?: number;
@@ -27,7 +27,7 @@ export interface SellerRequestData {
   title: string;
   artist: string;
   description: string;
-  images: string[];
+  images: string; // JSON string
   suggestedPrice: number;
   category: string;
   medium: string;

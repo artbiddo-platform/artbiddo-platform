@@ -16,7 +16,7 @@ export interface BotBehavior {
   type: BotType;
   avatar?: string;
   location?: string;
-  interests: string[];
+  interests: string; // JSON string
   maxBids: number;
   bidAmount: number;
   frequency: number;

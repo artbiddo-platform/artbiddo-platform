@@ -10,7 +10,7 @@ interface Bot {
   type: BotType;
   avatar?: string;
   location?: string;
-  interests: string[];
+  interests: string; // JSON string
   isActive: boolean;
   maxBids: number;
   bidAmount: number;

@@ -65,10 +65,10 @@ interface User {
   isKYCVerified: boolean;
   fraudScore: number;
   trustScore: number;
-  documents: string[];
-  paymentMethods: string[];
+  documents: string; // JSON string
+  paymentMethods: string; // JSON string
   location: string;
-  preferences: string[];
+  preferences: string; // JSON string
   notes: string;
 }
 
