@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -76,7 +76,7 @@ model Artwork {
   medium         String
   dimensions     String
   image          String
-  images         String[]      // Múltiples imágenes
+  images         String        // Múltiples imágenes (JSON string)
   startingPrice  Float
   currentPrice   Float
   estimatedValue Float
@@ -209,7 +209,7 @@ model Bot {
   type        BotType
   avatar      String?
   location    String?
-  interests   String[]  // Categorías de interés
+  interests   String    // Categorías de interés (JSON string)
   isActive    Boolean   @default(true)
   maxBids     Int       @default(50) // Máximo de pujas por día
   bidAmount   Int       @default(1)  // Cantidad de tokens por puja
@@ -256,7 +256,7 @@ model SellerRequest {
   title       String
   artist      String
   description String
-  images      String[]      // URLs de las imágenes
+  images      String        // URLs de las imágenes (JSON string)
   suggestedPrice Float
   category    String
   medium      String
