@@ -91,10 +91,10 @@ const mockUsers: User[] = [
     isKYCVerified: true,
     fraudScore: 1,
     trustScore: 95,
-    documents: ['DNI', 'Comprobante de domicilio'],
-    paymentMethods: ['Visa ****1234', 'PayPal'],
+    documents: JSON.stringify(['DNI', 'Comprobante de domicilio']),
+    paymentMethods: JSON.stringify(['Visa ****1234', 'PayPal']),
     location: 'Madrid, España',
-    preferences: ['Arte Contemporáneo', 'Pintura'],
+    preferences: JSON.stringify(['Arte Contemporáneo', 'Pintura']),
     notes: 'Cliente VIP, puja frecuentemente en obras de alto valor'
   },
   {
@@ -114,10 +114,10 @@ const mockUsers: User[] = [
     isKYCVerified: true,
     fraudScore: 0,
     trustScore: 98,
-    documents: ['Pasaporte', 'Certificado de autenticidad'],
+    documents: JSON.stringify(['Pasaporte', 'Certificado de autenticidad']),
     paymentMethods: ['Transferencia bancaria'],
     location: 'Barcelona, España',
-    preferences: ['Escultura', 'Arte Clásico'],
+    preferences: JSON.stringify(['Escultura', 'Arte Clásico']),
     notes: 'Vendedor confiable, obras de alta calidad'
   },
   {
@@ -160,10 +160,10 @@ const mockUsers: User[] = [
     isKYCVerified: true,
     fraudScore: 2,
     trustScore: 87,
-    documents: ['DNI', 'Comprobante de ingresos'],
+    documents: JSON.stringify(['DNI', 'Comprobante de ingresos']),
     paymentMethods: ['Mastercard ****5678'],
     location: 'Sevilla, España',
-    preferences: ['Fotografía', 'Arte Digital'],
+    preferences: JSON.stringify(['Fotografía', 'Arte Digital']),
     notes: 'Nuevo cliente prometedor'
   },
   {
