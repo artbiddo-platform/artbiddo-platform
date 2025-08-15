@@ -69,7 +69,7 @@ async function main() {
         email: 'carlos.rodriguez@email.com',
         name: 'Carlos Rodríguez',
         password: hashedPassword,
-        role: 'SELLER',
+        role: 'SELLER_REQUEST',
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
         phone: '+34 600 789 012',
         address: 'Barcelona, España',
@@ -139,8 +139,7 @@ async function main() {
         endDate: new Date('2024-02-15T20:00:00'),
         totalBids: 8,
         views: 156,
-        favorites: 12,
-        sellerId: users[1].id // Carlos Rodríguez (vendedor)
+        favorites: 12
       }
     }),
     prisma.artwork.create({
@@ -160,8 +159,7 @@ async function main() {
         endDate: new Date('2024-02-10T18:00:00'),
         totalBids: 12,
         views: 203,
-        favorites: 18,
-        sellerId: users[1].id
+        favorites: 18
       }
     }),
     prisma.artwork.create({
@@ -181,8 +179,7 @@ async function main() {
         endDate: new Date('2024-02-20T22:00:00'),
         totalBids: 6,
         views: 89,
-        favorites: 7,
-        sellerId: users[1].id
+        favorites: 7
       }
     }),
     prisma.artwork.create({
@@ -202,8 +199,7 @@ async function main() {
         endDate: new Date('2024-02-25T19:00:00'),
         totalBids: 15,
         views: 267,
-        favorites: 23,
-        sellerId: users[1].id
+        favorites: 23
       }
     })
   ]);
