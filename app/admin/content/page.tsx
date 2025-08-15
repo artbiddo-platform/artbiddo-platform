@@ -304,8 +304,8 @@ export default function ContentManagement() {
                       >
                         Editar
                       </button>
-                    </div>
-                  )}
+              </div>
+            )}
                     </div>
                 </div>
             </div>
