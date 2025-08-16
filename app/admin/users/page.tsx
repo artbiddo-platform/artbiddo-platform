@@ -137,10 +137,10 @@ const mockUsers: User[] = [
     isKYCVerified: false,
     fraudScore: 7,
     trustScore: 45,
-    documents: ['DNI'],
-    paymentMethods: ['Tarjeta prepago'],
+    documents: JSON.stringify(['DNI']),
+    paymentMethods: JSON.stringify(['Tarjeta prepago']),
     location: 'Valencia, España',
-    preferences: ['Arte Moderno'],
+    preferences: JSON.stringify(['Arte Moderno']),
     notes: 'Cuenta suspendida por pujas sospechosas'
   },
   {
@@ -183,10 +183,10 @@ const mockUsers: User[] = [
     isKYCVerified: false,
     fraudScore: 3,
     trustScore: 60,
-    documents: ['DNI'],
-    paymentMethods: [],
+    documents: JSON.stringify(['DNI']),
+    paymentMethods: JSON.stringify([]),
     location: 'Bilbao, España',
-    preferences: ['Arte Contemporáneo'],
+    preferences: JSON.stringify(['Arte Contemporáneo']),
     notes: 'Pendiente de verificación KYC'
   }
 ];
