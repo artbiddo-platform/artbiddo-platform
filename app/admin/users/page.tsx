@@ -115,7 +115,7 @@ const mockUsers: User[] = [
     fraudScore: 0,
     trustScore: 98,
     documents: JSON.stringify(['Pasaporte', 'Certificado de autenticidad']),
-    paymentMethods: ['Transferencia bancaria'],
+    paymentMethods: JSON.stringify(['Transferencia bancaria']),
     location: 'Barcelona, España',
     preferences: JSON.stringify(['Escultura', 'Arte Clásico']),
     notes: 'Vendedor confiable, obras de alta calidad'
@@ -161,7 +161,7 @@ const mockUsers: User[] = [
     fraudScore: 2,
     trustScore: 87,
     documents: JSON.stringify(['DNI', 'Comprobante de ingresos']),
-    paymentMethods: ['Mastercard ****5678'],
+    paymentMethods: JSON.stringify(['Mastercard ****5678']),
     location: 'Sevilla, España',
     preferences: JSON.stringify(['Fotografía', 'Arte Digital']),
     notes: 'Nuevo cliente prometedor'
